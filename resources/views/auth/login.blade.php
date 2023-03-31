@@ -64,12 +64,7 @@ $settings= App\Models\System::first();
                 <li class="nav-item">
                    
                 </li>
-               <li class="nav-item">
-                    <a  href="{{route('tracking')}}" class="navbar-nav-link">
-                        <i class="icon-package"></i>
-                        
-                    </a>
-                </li>
+          
             </ul>
         </div>
     </div>
@@ -160,18 +155,18 @@ $settings= App\Models\System::first();
 
                     <div class="navbar-collapse collapse" id="navbar-footer">
                         <span class="navbar-text">
-                            &copy; <?php echo date('Y'); ?> <a href="#">EMA ERP</a> by <a
-                                href="https://ema.co.tz/" target="_blank">Ujuzinet  Company Limited</a>
+                            &copy; <?php echo date('Y'); ?> <a href="#">Manufacturing System</a> by <a
+                                href="https://foundas.co.tz/" target="_blank">Foundas Technology</a>
                         </span>
 
                         <ul class="navbar-nav ml-lg-auto">
-                            <li class="nav-item"><a href="https://ema.co.tz/" class="navbar-nav-link"
+                            <li class="nav-item"><a href="https://foundas.co.tz/" class="navbar-nav-link"
                                     target="_blank"><i class="icon-lifebuoy mr-2"></i> Support</a></li>
-                            <li class="nav-item"><a href="https://ema.co.tz/"
+                            <li class="nav-item"><a href="https://foundas.co.tz/"
                                     class="navbar-nav-link" target="_blank"><i class="icon-file-text2 mr-2"></i>
                                     Docs</a></li>
                             <li class="nav-item"><a
-                                    href="https://ema.co.tz/"
+                                    href="https://foundas.co.tz/"
                                     class="navbar-nav-link font-weight-semibold"><span class="text-pink"><i
                                             class="icon-cart2 mr-2"></i> Purchase</span></a></li>
                         </ul>

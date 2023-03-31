@@ -57,8 +57,9 @@ public function create_item_movement($from_id=null,$to_id=null,$item_id=null,$qu
         if($result1 == true){
         // start adding remain quantity to movement table
         
-        $value=array('remain_balance'=>$result_original_quantity);     
-        $this->db->where('movement_id',$movement_id)->update('tbl_item_movement',$value);
+        $value=array('remain_balance'=>$result_original_quantity);
+        DB::table('good_movements')->where('id',$movement_id)->update($value);     
+        
         
         // end adding remain quantity to movement table  
             
@@ -71,7 +72,8 @@ public function create_item_movement($from_id=null,$to_id=null,$item_id=null,$qu
         // start adding new quantity to movement table
         
         $value=array('new_balance'=>$result_destination_quantity);     
-        $this->db->where('movement_id',$movement_id)->update('tbl_item_movement',$value);
+      
+        DB::table('good_movements')->where('id',$movement_id)->update($value);     
         
         // end adding new uantity to movement table 
             $result =  true;
@@ -81,7 +83,8 @@ public function create_item_movement($from_id=null,$to_id=null,$item_id=null,$qu
         }
         }else{
               $value = array('location_id'=>$to_id,'items_id'=>$item_id,'quantity'=>$quantity);
-              $result_id = $this->db->insert('tbl_store_items',$value);
+           
+              $result_id = DB::table('tbl_store_items')->inser($value);
               if(!empty($result_id)){
                 $result = true;
             }else{

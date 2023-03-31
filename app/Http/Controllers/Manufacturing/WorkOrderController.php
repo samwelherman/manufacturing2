@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Manufacturing;
 
 use App\Http\Controllers\Controller;
 use App\Models\Manufacturing\WorkOrder;
+use App\Models\Manufacturing\WorkOrderItems;
 // use App\Models\Manufacturing\Inventory;
 use App\Models\Manufacturing\Issue;
 // use App\Models\Manufacturing\Location;
@@ -15,6 +16,7 @@ use App\Models\AccountCodes;
 use App\Models\Transaction;
 use App\Models\Accounts;
 use App\Models\JournalEntry;
+use App\Models\GoodMovement;
 
 use App\Models\Manufacturing\BillOfMaterial;
 use App\Models\Manufacturing\BillOfMaterialInventory;
@@ -46,13 +48,14 @@ class WorkOrderController extends Controller
         //
         $data['work_orders'] = WorkOrder::orderBy('id','DESC')->where('added_by', auth()->user()->added_by)->get();
 
-        $data['billofmaterials'] = BillOfMaterial::all()->where('added_by', auth()->user()->added_by);
+        $data['name'] = BillOfMaterial::all();
 
         $data['locationWs'] = Location::all()->where('type', 1)->where('added_by', auth()->user()->added_by);
 
         $data['locationFs'] = Location::all()->where('type', 2)->where('added_by', auth()->user()->added_by);
 
         $data['locations'] = Location::all()->where('type', 3)->where('added_by', auth()->user()->added_by);
+
 
         $data['items'] = Items::all()->where('type', 2);
         $data['client'] = Client::where('user_id', auth()->user()->added_by)->get();
@@ -97,17 +100,17 @@ class WorkOrderController extends Controller
         $data['reference_no'] = "WOD_NO" . $pro;
 
 
-        $data['unit'] = $request->unit;
+       // $data['unit'] = $request->unit;
         $data['type'] = $request->type;
-        $data['quantity'] = $request->quantity;
-        $data['due_quantity'] = $request->quantity;
-        $data['balance'] = $request->quantity;
-        $data['product'] = $request->product;
+        //$data['quantity'] = $request->quantity;
+        //$data['due_quantity'] = $request->quantity;
+        //$data['balance'] = $request->quantity;
+       // $data['product'] = $request->product;
 
 
         $bill   = BillOfMaterial::find($request->product);
 
-        $data['product_name'] = $bill->product;
+        //$data['product_name'] = $bill->product;
 
         $data['work_center'] = $request->work_center;
 
@@ -126,6 +129,42 @@ class WorkOrderController extends Controller
         $data['created_by'] = auth()->user()->id;
         $data['created_date'] = $today;
         $work_order = WorkOrder::create($data);
+
+        $nameArr =$request->item_name;
+        $qtyArr = $request->quantity;
+        $unitArr = $request->unit;
+
+        if(!empty($nameArr)){
+            for($i = 0; $i < count($nameArr); $i++){
+                if(!empty($nameArr[$i])){
+
+                    $bill_of_material = BillOfMaterial::find($nameArr[$i]);
+                    
+                   
+                    
+                    $items = array(
+                        'bill_of_material_id'=>$bill_of_material->id,
+                        'work_order_id'=>$work_order->id,
+                        
+                        'quantity' =>   $qtyArr[$i],
+                        'unit' => $unitArr[$i],
+                        'product' => $bill_of_material->product,
+                        'added_by' => auth()->user()->added_by,
+                         
+                        );
+
+                        WorkOrderItems::create($items);
+                       
+                     
+    
+    
+                }
+            }
+            
+        }   
+
+
+
 
         return redirect(route('work_order.index'))->with(['success' => 'Work Order Created Successfully']);
     }
@@ -283,8 +322,10 @@ class WorkOrderController extends Controller
         $purchase = WorkOrder::find($id);
         if (!empty($purchase)) {
 
+        $work_order_items = WorkOrderItems::all()->where('work_order_id',$purchase->id);
 
-            $inv_items   = BillOfMaterialInventory::where('bill_of_material_id', $purchase->product)->get();
+        foreach($work_order_items as $items){
+            $inv_items   = BillOfMaterialInventory::where('bill_of_material_id', $items->bill_of_material_id)->get();
 
             $total_qty = 0;
             if ($inv_items->isNotEmpty()) {
@@ -293,8 +334,8 @@ class WorkOrderController extends Controller
 
                     $data['id'] = $row->items_id;
 
-                    $data['quantity_wk'] = $row->quantity * $purchase->quantity;
-                    $total_qty += $row->quantity * $purchase->quantity;
+                    $data['quantity_wk'] = $row->quantity * $items->quantity;
+                    $total_qty += $row->quantity * $items->quantity;
 
 
                     $dt2 = Items::find($row->items_id);
@@ -314,67 +355,35 @@ class WorkOrderController extends Controller
                 $temp_quantity = $total_qty;
                 $pur_items['release_quantity'] = $temp_quantity;
                 $pur_items['due_quantity'] = $temp_quantity;
-                $purchase->update($pur_items);
+                $work_order_items->update($pur_items);
 
-                foreach ($temp as $row2) {
-
-
-                    $dt3 = Items::find($row2['id']);
-
-                    $diff = $dt3->quantity - $row2['quantity_wk'];
-
-                    //1. update quantity on inventory store after release 
-
-                    //1.1 updating value on inventory items
-                    $dt3->update(['quantity' => $diff]);
-
-                    //1.2 reduce value on inventory store location
-
-                    $dt31 = Location::find($purchase->location_id);
-
-                    $data221 = $dt31->quantity - $row2['quantity_wk'];
+                WorkOrderItems::find($items->id)->update($pur_items);
 
 
-                    $dt31->update(['quantity' => $data221]);
+                $movement_items = [
+                    'item_id'=>$row->items_id,
+                    'staff'=>auth()->user()->id,
+                    'added_by'=>auth()->user()->id,
+                    'source_location'=>$purchase->location_id,
+                    'destination_location'=>$purchase->work_center,
+                    'quantity'=> $data['quantity_wk'],
+ 
+                 ];
+                 $movement = GoodMovement::creare($moved_items);
+                 $this->movement_model->create_item_movement($purchase->location_id,$purchase->work_center,$row->items_id,$data['quantity_wk'],$movement->id);
 
 
-                    //2. increase value on work center store location
-
-                    $dt3W = Location::find($purchase->work_center);
-
-                    $data22W = $dt3W->quantity +  $row2['quantity_wk'];
-
-                    $dt3W->update(['quantity' => $data22W]);
-
-                    // --------------------------------------------
-                    $items23 = array(
-                        'name' => $dt3->name,
-                        'type' =>   2,
-                        'cost_price' => $dt3->quantity,
-                        'sales_price' =>  $dt3->tax_rate,
-                        'unit' => $dt3->unit,
-                        'quantity' =>  $row2['quantity_wk'],
-                        'description' =>  $dt3->description,
-                        'added_by' => $dt3->added_by
-                    );
-
-                    //Items::create($items23);;
-
-
-
-                    // -------------------------------------------
-
-
-                }
-
-
-                $dataP['status'] = 2;
-                $prd = $purchase->update($dataP);
 
                 return redirect(route('work_order.index'))->with(['success' => 'Released Successfully']);
             } else {
                 return redirect(route('work_order.index'))->with(['error' => 'Bill Of Material Inventory Not Found']);
             }
+            
+        }
+
+          
+
+
         } else {
             return redirect(route('work_order.index'))->with(['error' => 'Purchase ID Not Found']);
         }

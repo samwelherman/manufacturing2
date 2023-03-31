@@ -72,6 +72,14 @@
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('manufacturing/manufacturing_location*') ? 'active' : '' }}"
+                     href="{{ url('manufacturing/manufacturing_location') }}">
+                    <i class="icon-store"></i><span>Stores</span>
+                    </a>
+                </li>
+
+
 
                 @can('view-store-purchase')
                     <li class="nav-item nav-item-submenu">
@@ -91,7 +99,7 @@
                                         href="{{ url('store/purchases/store_purchase') }}"><i></i></i>Manage
                                         Purchases</a></li>
                             @endcan
-                            <li class="nav-item"><a
+                            <!-- <li class="nav-item"><a
                                     class="nav-link {{ request()->is('store/purchases/creditors_report*') ? 'active' : '' }}"
                                     href="{{ url('store/purchases/creditors_report') }}"><i></i></i>Creditors
                                     Report</a></li>
@@ -103,8 +111,8 @@
                             <li class="nav-item"><a
                                     class="nav-link {{ request()->is('store/purchases/store_pos_issue*') ? 'active' : '' }}"
                                     href="{{ url('store/purchases/store_pos_issue') }}"><i></i></i>Good Issue</a>
-                            </li>
-                           <!-- <li class="nav-item"><a
+                            </li> */
+                            <li class="nav-item"><a
                                     class="nav-link {{ request()->is('store/pos_activity*') ? 'active' : '' }}"
                                     href="{{ url('store/pos_activity') }}"><i></i></i>Track POS Activity</a></li> -->
 
@@ -157,16 +165,13 @@
 
                         <ul class="nav nav-group-sub" data-submenu-title="Layouts">
                             @can('view-manufacture')
-                                <li class="nav-item"><a
-                                        class="nav-link {{ request()->is('manufacturing/manufacturing_location*') ? 'active' : '' }}"
-                                        href="{{ url('manufacturing/manufacturing_location') }}">Location/Store</a>
-                                </li>
+                              
                             @endcan
                               @can('view-manufacture')
                                                       <li class="nav-item"><a
                                                                         class="nav-link {{ request()->is('manufacturing/manufacturing_inventory*') ? 'active' : '' }}"
-                                                                        href="{{ url('manufacturing/product_items') }}">Inventory
-                                                                        Items</a></li>
+                                                                        href="{{ url('manufacturing/product_items') }}">Product Produced
+                                                                        </a></li>
                              @endcan
                              <!--
                                             @can('view-manufacture')
@@ -183,17 +188,18 @@
                             @can('view-manufacture')
                                 <li class="nav-item"><a
                                         class="nav-link {{ request()->is('manufacturing/work_order*') ? 'active' : '' }}"
-                                        href="{{ url('manufacturing/work_order') }}">Work Order</a></li>
+                                        href="{{ url('manufacturing/work_order') }}">Production  Order</a></li>
                             @endcan
 
-
+                           
+                        <!--
 
                             @can('view-manufacture')
                                 <li class="nav-item"><a
                                         class="nav-link {{ request()->is('inventory/good_issue*') ? 'active' : '' }}"
                                         href="{{ url('inventory/good_issue') }}">Good Issue</a></li>
                             @endcan
-                            /* @can('view-manufacture2')
+                            @can('view-manufacture2')
                                 <li class="nav-item"><a
                                         class="nav-link {{ request()->is('inventory/good_return*') ? 'active' : '' }}"
                                         href="{{ url('inventory/good_return') }}">Good Return</a></li>
@@ -208,7 +214,7 @@
                                         class="nav-link {{ request()->is('inventory/good_reallocation*') ? 'active' : '' }}"
                                         href="{{ url('inventory/good_reallocation') }}">Good
                                         Reallocation</a></li>
-                            @endcan */
+                            @endcan -->
 
                         </ul>
                     </li>

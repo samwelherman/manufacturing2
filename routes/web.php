@@ -1195,7 +1195,7 @@ Route::group(['prefix' => 'purchases'], function () {
     Route::get('store_purchase_pdfview',array('as'=>'store_purchase_pdfview','uses'=>'Bar\POS\PurchaseController@inv_pdfview'))->middleware('auth');
     Route::get('order_payment/{id}', 'orders\OrdersController@order_payment')->name('store_purchase_order.pay')->middleware('auth');
     Route::resource('store_purchase_payment', 'Bar\POS\PurchasePaymentController')->middleware('auth');
-    Route::any('creditors_report', 'Bar\POS\PurchaseController@creditors_report')->middleware('auth');
+    //Route::any('creditors_report', 'Bar\POS\PurchaseController@creditors_report')->middleware('auth');
     Route::resource('store_pos_issue', 'Bar\POS\GoodIssueController')->middleware('auth');
     Route::get('findQuantity', 'Bar\POS\GoodIssueController@findQuantity'); 
     Route::get('issue_approve/{id}', 'Bar\POS\GoodIssueController@approve')->name('store_pos_issue.approve')->middleware('auth');
