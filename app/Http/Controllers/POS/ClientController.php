@@ -4,7 +4,6 @@ namespace App\Http\Controllers\POS;
 
 use App\Http\Controllers\Controller;
 use App\Models\POS\Client;
-use App\Models\Bar\POS\Activity;
 use Illuminate\Http\Request;
 
 class ClientController  extends Controller
@@ -45,17 +44,7 @@ class ClientController  extends Controller
       $data['user_id']=auth()->user()->added_by;
       $client = Client::create($data);
 
-if(!empty($client)){
-                    $activity =Activity::create(
-                        [ 
-                            'added_by'=>auth()->user()->added_by,
-       'user_id'=>auth()->user()->id,
-                            'module_id'=>$client->id,
-                             'module'=>'Client',
-                            'activity'=>"Client " .  $client->name. "  Created",
-                        ]
-                        );                      
-       }
+
 
       
       return redirect(route('store_pos_client.index'))->with(['success'=>'Client Created Successfully']);
@@ -100,17 +89,6 @@ if(!empty($client)){
        $data['user_id']=auth()->user()->added_by;
        $client->update($data);
 
- if(!empty($client)){
-                    $activity =Activity::create(
-                        [ 
-                            'added_by'=>auth()->user()->added_by,
-       'user_id'=>auth()->user()->id,
-                            'module_id'=>$id,
-                             'module'=>'Client',
-                            'activity'=>"Client " .  $client->name. "  Updated",
-                        ]
-                        );                      
-       }
 
        
        return redirect(route('store_pos_client.index'))->with(['success'=>'Client Updated Successfully']);
@@ -127,17 +105,7 @@ if(!empty($client)){
        //
 
        $client = Client::find($id);
-if(!empty($client)){
-                    $activity =Activity::create(
-                        [ 
-                            'added_by'=>auth()->user()->added_by,
-       'user_id'=>auth()->user()->id,
-                            'module_id'=>$id,
-                             'module'=>'Client',
-                            'activity'=>"Client " .  $client->name. "  Deleted",
-                        ]
-                        );                      
-       }
+
        $client->delete();
 
        

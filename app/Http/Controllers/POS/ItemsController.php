@@ -54,12 +54,8 @@ class ItemsController extends Controller
                           ->editColumn('cost_price', function ($row) {
                         return number_format($row->cost_price,2);
                    })
-                       ->editColumn('sales_price', function ($row) {
-                        return number_format($row->sales_price,2);
-                   })
-                     ->editColumn('quantity', function ($row) {
-                        return number_format($row->quantity,2);
-                   })
+                   
+                 
 
                     ->editColumn('action', function($row){
                $action=' <div class="form-inline"><a href="'.route('items.edit',$row->id).'"  title="Edit " class="list-icons-item text-primary"  > <i class="icon-pencil7"></i> </a>&nbsp

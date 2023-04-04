@@ -1180,7 +1180,7 @@ Route::resource('manage_bar', 'Bar\ManageBarController');
  Route::any('pos_activity', 'Bar\POS\ReportController@summary'); 
 
 Route::group(['prefix' => 'purchases'], function () {
-    Route::resource('store_pos_supplier', 'Bar\POS\SupplierController')->middleware('auth');
+    Route::resource('store_pos_supplier', 'POS\SupplierController')->middleware('auth');
     Route::resource('store_items', 'POS\ItemsController')->middleware('auth');
     Route::post('item_import','Bar\POS\ImportItemsController@import')->name('store_item.import');
     Route::post('item_sample','Bar\POS\ImportItemsController@sample')->name('store_item.sample');

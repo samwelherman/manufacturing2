@@ -52,14 +52,8 @@
                                                     rowspan="1" colspan="1"
                                                     aria-label="Engine version: activate to sort column ascending"
                                                     style="width: 141.219px;">Cost Price</th>
-                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
-                                                    rowspan="1" colspan="1"
-                                                    aria-label="Engine version: activate to sort column ascending"
-                                                    style="width: 141.219px;">Sales Price</th>
-                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
-                                                    rowspan="1" colspan="1"
-                                                    aria-label="Engine version: activate to sort column ascending"
-                                                    style="width: 141.219px;">Quantity</th>
+
+                                           
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="CSS grade: activate to sort column ascending"
@@ -292,14 +286,8 @@ $(function() {
                 data: 'cost_price',
                 name: 'cost_price'
             },
-            {
-                data: 'sales_price',
-                name: 'sales_price'
-            },
-            {
-                data: 'quantity',
-                name: 'quantity'
-            },
+        
+      
 
             {
                 data: 'unit',
