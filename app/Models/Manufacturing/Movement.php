@@ -84,7 +84,7 @@ public function create_item_movement($from_id=null,$to_id=null,$item_id=null,$qu
         }else{
               $value = array('location_id'=>$to_id,'items_id'=>$item_id,'quantity'=>$quantity);
            
-              $result_id = DB::table('tbl_store_items')->inser($value);
+              $result_id = DB::table('tbl_store_items')->insert($value);
               if(!empty($result_id)){
                 $result = true;
             }else{

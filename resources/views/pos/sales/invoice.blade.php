@@ -658,7 +658,12 @@ $(document).ready(function() {
             var id = $(this).val();
               var sub_category_id = $(this).data('category_id');
              var item= $('.item_id' + sub_category_id).val();
-           var location= $('.location').val();
+             var location = $('.locations').val();
+
+          // var location = $('#location').val();
+           //var location = document.getElementById("location");
+          // var location = document.getElementById(location);
+           alert(location);
 
     console.log(location);
             $.ajax({

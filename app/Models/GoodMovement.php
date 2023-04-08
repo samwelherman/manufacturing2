@@ -25,4 +25,10 @@ class GoodMovement extends Model
     {
         return $this->belongsTo('App\Models\user');
     }
+
+        
+    public function items()
+    {
+        return $this->belongsTo('App\Models\POS\Items','item_id');
+    }
 }

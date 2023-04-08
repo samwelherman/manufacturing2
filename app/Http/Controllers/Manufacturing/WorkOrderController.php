@@ -8,6 +8,7 @@ use App\Models\Manufacturing\WorkOrderItems;
 // use App\Models\Manufacturing\Inventory;
 use App\Models\Manufacturing\Issue;
 // use App\Models\Manufacturing\Location;
+use App\Models\Screp;
 
 use  App\Models\POS\Items;
 use App\Models\Location;
@@ -113,6 +114,8 @@ class WorkOrderController extends Controller
         //$data['product_name'] = $bill->product;
 
         $data['work_center'] = $request->work_center;
+
+        $data['shift'] = $request->shift;
 
         $data['finished_store'] = $request->finished_store;
 
@@ -341,7 +344,10 @@ class WorkOrderController extends Controller
                     $dt2 = Items::find($row->items_id);
 
                     $store_balance = Store_Items::where('location_id',$purchase->location_id)->where('items_id',$row->items_id)->get()->first();
+                    if(empty($store_balance)){
+                        return redirect(route('work_order.index'))->with(['error' => 'There is one raw material not registerd in the store'.$row->items_id.'and'.$purchase->location_id]);
 
+                    }
                     if ($store_balance->quantity >= $data['quantity_wk']) {
 
                         $temp[] = $data;
@@ -350,15 +356,28 @@ class WorkOrderController extends Controller
                     }
                 }
 
-                //dd($total_qty);
+                foreach ($inv_items as $row) {
 
-                $temp_quantity = $total_qty;
+                    $data['id'] = $row->items_id;
+
+                    $data['quantity_wk'] = $row->quantity * $items->quantity;
+                    $total_qty += $row->quantity * $items->quantity;
+
+
+                    $dt2 = Items::find($row->items_id);
+
+                    $store_balance = Store_Items::where('location_id',$purchase->location_id)->where('items_id',$row->items_id)->get()->first();
+                    if(empty($store_balance)){
+                        return redirect(route('work_order.index'))->with(['error' => 'There is one raw material not registerd in the store'.$row->items_id.'and'.$purchase->location_id]);
+
+                    }
+                    if ($store_balance->quantity >= $data['quantity_wk']) {
+                        $temp_quantity = $total_qty;
                 $pur_items['release_quantity'] = $temp_quantity;
                 $pur_items['due_quantity'] = $temp_quantity;
-                $work_order_items->update($pur_items);
+              //  $work_order_items->update($pur_items);
 
                 WorkOrderItems::find($items->id)->update($pur_items);
-
 
                 $movement_items = [
                     'item_id'=>$row->items_id,
@@ -369,10 +388,38 @@ class WorkOrderController extends Controller
                     'quantity'=> $data['quantity_wk'],
  
                  ];
-                 $movement = GoodMovement::creare($moved_items);
+                 $movement = GoodMovement::create($movement_items);
                  $this->movement_model->create_item_movement($purchase->location_id,$purchase->work_center,$row->items_id,$data['quantity_wk'],$movement->id);
 
 
+                    } else {
+                        return redirect(route('work_order.index'))->with(['error' => 'Inventory Store Quanttity is low']);
+                    }
+                }
+
+                //dd($total_qty);
+
+                $temp_quantity = $total_qty;
+                $pur_items['release_quantity'] = $temp_quantity;
+                $pur_items['due_quantity'] = $temp_quantity;
+              //  $work_order_items->update($pur_items);
+
+              //  WorkOrderItems::find($items->id)->update($pur_items);
+
+
+                // $movement_items = [
+                //     'item_id'=>$row->items_id,
+                //     'staff'=>auth()->user()->id,
+                //     'added_by'=>auth()->user()->id,
+                //     'source_location'=>$purchase->location_id,
+                //     'destination_location'=>$purchase->work_center,
+                //     'quantity'=> $data['quantity_wk'],
+ 
+                //  ];
+                //  $movement = GoodMovement::create($movement_items);
+                //  $this->movement_model->create_item_movement($purchase->location_id,$purchase->work_center,$row->items_id,$data['quantity_wk'],$movement->id);
+
+                 $purchase->update(['status'=>2]);
 
                 return redirect(route('work_order.index'))->with(['success' => 'Released Successfully']);
             } else {
@@ -391,17 +438,93 @@ class WorkOrderController extends Controller
 
     public function produce(Request $request, $id)
     {
-        //
+        //withdraw_quantity
+        //items
+        
         $purchase = WorkOrder::find($id);
+
+
+        //saving remained material as screps
+        if($request->screp){
+            
+        $data['quantity'] = $request->screp;
+        $data['resposible_person'] = $request->user_id;
+        $data['added_by'] = auth()->user()->id;
+        $data['balance'] = 0;
+        $data['shift'] = $purchase->shift;
+        $data['work_order_id'] = $id;
+        $data['wasted'] = 0;
+        Screp::create($data);
+        }
+
+
+
+     
 
         if (!empty($purchase)) {
 
-            $temp_sum = $request->withdraw_quantity;
+            $temp_sumArr = $request->withdraw_quantity;
+            $itemArr = $request->items;
+            
+            if(!empty($itemArr)){
+
+                for($i = 0; $i < count($itemArr); $i++){
+                    $temp_sum = $temp_sumArr[$i];
+                    $work_order_items = WorkOrderItems::find($itemArr[$i]);
+
+                    $bill_of_material = BillOfMaterialInventory::all()->where('bill_of_material_id',$work_order_items->bill_of_material_id);
+                    
+                    foreach($bill_of_material as $row){
+                        $raw_material = $row->quantity*$temp_sum;
+                        $store_balance = Store_Items::where('location_id',$purchase->work_center)->where('items_id',$row->items_id)->get()->first();
+                         
+                        if(empty($store_balance)){
+                            return redirect(route('work_order.index'))->with(['error' => 'Item  or Location  Not Found']);
+                        }
+                        if($store_balance->quantity < $raw_material ){
+                           return redirect(route('work_order.index'))->with(['error' => 'Items not available1']);
+
+                        }
+                    }
+                
+                    //find raw material and deduct them from production store to dispose store
+                    foreach($bill_of_material as $row){
+                        $raw_material = $row->quantity*$temp_sum;                      
+
+                        $movement_items = [
+                            'item_id'=>$row->items_id,
+                            'staff'=>auth()->user()->id,
+                            'added_by'=>auth()->user()->id,
+                            'source_location'=>$purchase->location_id,
+                            'destination_location'=>4,
+                            'quantity'=> $raw_material,
+         
+                         ];
+                         $movement = GoodMovement::create($movement_items);
+                       
+                         $this->movement_model->create_item_movement($purchase->work_center,4,$row->items_id,$raw_material,$movement->id);
+                    
+                    }
+              
+                $this->movement_model->create_item_movement1('',$purchase->finished_store,$work_order_items->product,$temp_sum,'');
+
+                $dataP['balance'] =  $temp_sum;
+                $work_order_items->update($dataP);
+
+             
+
+               
+                }
+                $purchase->update(['status' => 2]);
+
+
+            }
+
 
 
             $dt2 = Location::find($purchase->work_center);
 
-            if ($purchase->balance >= $temp_sum) {
+
 
                 //$dataP['status'] = 3;
 
@@ -416,94 +539,21 @@ class WorkOrderController extends Controller
                 }
                 $prd = $purchase->update($dataP);
 
-                $diff = $dt2->quantity - $temp_sum;
+              
 
-                //update quantity on work center store after release 
-                $lctr = Location::where('id', $purchase->work_center)->update(['quantity' => $diff]);
-
-                $dt3 = Location::find($purchase->finished_store);
-
-                $data22 = $dt3->quantity + $temp_sum;
-
-                //update quantity on finished  store after release
-                Location::where('id', $purchase->finished_store)->update(['quantity' => $data22]);
-
-                $inv = Items::find($purchase->product_name);
-
-                //update amount of quantity produced in items table
-                $inv->update(['quantity'=>$inv->quantity + $temp_sum]);
-
-                $this->movement_model->create_item_movement1('',$purchase->finished_store,$purchase->product_name,$temp_sum,'');
+               
 
 
-                $d = date('Y-m-d');
+             
 
-                $codes = AccountCodes::where('account_name', 'Inventory')->where('added_by', auth()->user()->added_by)->first();
-                $journal = new JournalEntry();
-                $journal->account_id = $codes->id;
-                $date = explode('-', $d);
-                $journal->date =   $d;
-                $journal->year = $date[0];
-                $journal->month = $date[1];
-                $journal->transaction_type = 'manufacturing';
-                $journal->name = 'Manufacturing Product';
-                $journal->income_id = $id;
-                $journal->debit = $inv->cost_price *  $temp_sum;
-                $journal->added_by = auth()->user()->added_by;
-                $journal->notes = "Manufacturing Product -  " . $inv->name;
-                $journal->save();
-
-                $cr = AccountCodes::where('account_name', 'Bill of Material')->where('added_by', auth()->user()->added_by)->first();
-                $journal = new JournalEntry();
-                $journal->account_id = $cr->id;
-                $date = explode('-', $d);
-                $journal->date =   $d;
-                $journal->year = $date[0];
-                $journal->month = $date[1];
-                $journal->transaction_type = 'manufacturing';
-                $journal->name = 'Manufacturing Product';
-                $journal->income_id = $id;
-                $journal->credit = $inv->cost_price *  $temp_sum;
-                $journal->added_by = auth()->user()->added_by;
-                $journal->notes = "Manufacturing Product -  " . $inv->name;
-                $journal->save();
-
-                $good = AccountCodes::where('account_name', 'Finish Goods')->where('added_by', auth()->user()->added_by)->first();
-                $journal = new JournalEntry();
-                $journal->account_id = $good->id;
-                $date = explode('-', $d);
-                $journal->date =   $d;
-                $journal->year = $date[0];
-                $journal->month = $date[1];
-                $journal->transaction_type = 'manufacturing';
-                $journal->name = 'Manufacturing Product';
-                $journal->income_id = $id;
-                $journal->debit = $inv->cost_price *  $temp_sum;
-                $journal->added_by = auth()->user()->added_by;
-                $journal->notes = "Manufacturing Product -  " . $inv->name;
-                $journal->save();
+            
 
 
-                $prd = AccountCodes::where('account_name', 'Production Control')->where('added_by', auth()->user()->added_by)->first();
-                $journal = new JournalEntry();
-                $journal->account_id = $prd->id;
-                $date = explode('-', $d);
-                $journal->date =   $d;
-                $journal->year = $date[0];
-                $journal->month = $date[1];
-                $journal->transaction_type = 'manufacturing';
-                $journal->name = 'Manufacturing Product';
-                $journal->income_id = $id;
-                $journal->credit = $inv->cost_price *  $temp_sum;
-                $journal->added_by = auth()->user()->added_by;
-                $journal->notes = "Manufacturing Product -  " . $inv->name;
-                $journal->save();
+        
 
 
                 return redirect(route('work_order.index'))->with(['success' => 'Produced Successfully']);
-            } else {
-                return redirect(route('work_order.index'))->with(['error' => 'Work Center Store Quantity is low']);
-            }
+
 
 
 
@@ -587,8 +637,17 @@ class WorkOrderController extends Controller
         $id = $request->id;
         $type = $request->type;
         if ($type == 'produce') {
-            return view('manufacturing.produce', compact('id'));
-        } else if ($type == 'overhead') {
+            $work_order_items = WorkOrderItems::all()->where('work_order_id',$id);
+            $user = User::all();
+            return view('manufacturing.produce', compact('id','work_order_items','user'));
+        } 
+        else  if ($type == 'screp') {
+            $screp = Screp::find($id);
+          
+            return view('manufacturing.update_screp', compact('id','screp'));
+        }
+        
+        else if ($type == 'overhead') {
             $bank_accounts = AccountCodes::where('added_by', auth()->user()->added_by)->where('account_group', 'Cash and Cash Equivalent')->orwhere('account_name', 'Payables')->where('added_by', auth()->user()->added_by)->get();
             $chart_of_accounts = AccountCodes::where('account_group', '!=', 'Cash and Cash Equivalent')->where('added_by', auth()->user()->added_by)->get();
             return view('manufacturing.overhead', compact('id', 'bank_accounts', 'chart_of_accounts'));

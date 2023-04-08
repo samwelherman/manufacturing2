@@ -30,10 +30,10 @@ class GoodMovementController extends Controller
     public function index()
     {
         //
-        $inventory= Inventory::where('added_by',auth()->user()->added_by)->get();
+        $inventory= Items::all();
         $staff=FieldStaff::all();
-        $location=Location::where('added_by',auth()->user()->added_by)->get();
-        $movement= GoodMovement::where('added_by',auth()->user()->added_by)->get();
+        $location=Location::all();
+        $movement= GoodMovement::all();
        return view('inventory.good_movement',compact('movement','inventory','staff','location'));
     }
 
@@ -77,7 +77,7 @@ if (!empty($data['items_id'])) {
          $item_info = Items::find($request->item_id);
  }
     
-     $result = $this->movement_model->check_quantity($data['original_location_id'],$data['items_id'],$data['quantity']);
+     $result = $this->movement_model->check_quantity($data['source_location'],$data['item_id'],$data['quantity']);
      
      if($result == true){
     
@@ -125,9 +125,9 @@ if (!empty($data['items_id'])) {
     public function edit($id)
     {
         //
-        $inventory= Inventory::where('added_by',auth()->user()->added_by)->get();
-        $staff=FieldStaff::where('added_by',auth()->user()->added_by)->get();
-        $location=Location::where('added_by',auth()->user()->added_by)->get();
+        $inventory= Items::all();
+        $staff=FieldStaff::all();
+        $location=Location::all();
         $data= GoodMovement::find($id);
        return view('inventory.good_movement',compact('data','inventory','staff','location','id'));
     }

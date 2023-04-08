@@ -40,11 +40,11 @@ class  BillOfMaterialController extends Controller
     {
         //
 
-        $billofmaterial=BillOfMaterial::all()->where('added_by', auth()->user()->added_by);
+        $billofmaterial=BillOfMaterial::all();
       
-        $name = Items::all()->where('type',3)->where('added_by', auth()->user()->added_by);
-        $locations = Location::all()->where('type',3)->where('added_by', auth()->user()->added_by);
-        $products = Items::all()->where('type',2)->where('added_by', auth()->user()->added_by);
+        $name = Items::all()->where('type',3);
+        $locations = Location::all()->where('type',3);
+        $products = Items::all()->where('type',2);
          //$item = Type::all();
 
         $type="";
@@ -169,15 +169,15 @@ class  BillOfMaterialController extends Controller
         //
        
  
-        $name = Items::all()->where('type',3)->where('added_by', auth()->user()->added_by);
-       $location = Location::all()->where('type',3)->where('added_by', auth()->user()->added_by);
+        $name = Items::all()->where('type',3);
+       $location = Location::all()->where('type',3);
         $data=BillOfMaterial::find($id);
         $items=BillOfMaterialInventory::where('bill_of_material_id',$id)->get();
         
-        $work_centre = Location::all()->where('type',1)->where('added_by', auth()->user()->added_by);
-         $item = Items::all()->where('type',1)->where('added_by', auth()->user()->added_by);
+        $work_centre = Location::all()->where('type',1);
+         $item = Items::all()->where('type',3);
         $type="";
-        $products = Items::all()->where('type',2)->where('added_by', auth()->user()->added_by);
+        $products = Items::all()->where('type',2);
        return view('manufacturing.bill_of_material',compact('name','work_centre','location','data','id','items','item','type','products'));
     }
 

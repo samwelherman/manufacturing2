@@ -687,6 +687,8 @@ Route::any('driver_route/{id}', 'Driver\DriverController@route')->name('driver.r
 
     Route::group(['prefix' => 'manufacturing'], function () {
     
+      Route::resource('good_movement', 'Manufacturing\GoodMovementController')->middleware('auth');
+
      Route::resource('manufacturing_purchase', 'Manufacturing\PurchaseInventoryController')->middleware('auth');
      Route::resource('product_items', 'Manufacturing\ItemsController')->middleware('auth');
 
@@ -696,6 +698,8 @@ Route::any('driver_route/{id}', 'Driver\DriverController@route')->name('driver.r
      Route::get('bill_of_material_inv_pdfview',array('as'=>'bill_of_material_inv_pdfview','uses'=>'Manufacturing\BillOfMaterialController@inv_pdfview'))->middleware('auth');
     Route::resource('work_order', 'Manufacturing\WorkOrderController')->middleware('auth');
     Route::get('workModal', 'Manufacturing\WorkOrderController@discountModal'); 
+    Route::resource('screp', 'Manufacturing\ScrepController')->middleware('auth');
+
     Route::get('findbillProduct', 'Manufacturing\WorkOrderController@findbillProduct')->middleware('auth'); 
     Route::get('work_order_approve/{id}', 'Manufacturing\WorkOrderController@approve')->name('work_order.approve')->middleware('auth'); 
     Route::get('work_order_release/{id}', 'Manufacturing\WorkOrderController@release')->name('work_order.release')->middleware('auth');
@@ -751,6 +755,8 @@ Route::get('issue_approve/{id}', 'Inventory\GoodIssueController@approve')->name(
 Route::resource('good_return', 'Inventory\GoodReturnController')->middleware('auth');
 Route::get('return_approve/{id}', 'Inventory\GoodReturnController@approve')->name('return.approve')->middleware('auth');
 Route::resource('good_movement', 'Inventory\GoodMovementController')->middleware('auth');
+Route::get('good_movement_approve/{id}', 'Inventory\GoodMovementController@approve')->name('good_movement.approve')->middleware('auth'); 
+
 Route::get('movement_approve/{id}', 'Inventory\GoodReturnController@approve')->name('movement.approve')->middleware('auth'); 
 Route::resource('good_reallocation', 'Inventory\GoodReallocationController')->middleware('auth');
 Route::get('reallocation_approve/{id}', 'Inventory\GoodReallocationController@approve')->name('reallocation.approve')->middleware('auth'); 
@@ -783,71 +789,71 @@ Route::any('general_report2', 'Cotton\ReportController@general_report2')->middle
 });
 
 
-Route::group(['prefix' => 'cotton_collection'], function () {
-Route::get('production_pdfview',array('as'=>'production_pdfview','uses'=>'Cotton\ProductionController@inv_pdfview'))->middleware('auth');
-Route::resource('operator', 'Cotton\OperatorController')->middleware('auth');
-Route::resource('collection_center', 'Cotton\CollectionCenterController')->middleware('auth');
-Route::resource('district', 'Cotton\DistrictController')->middleware('auth');
-Route::get('findCenterDistrict', 'Cotton\CollectionCenterController@findRegion')->middleware('auth');
-Route::get('findCenterRegion', 'Cotton\CollectionCenterController@findDistrict')->middleware('auth');
-Route::get('centerModal', 'Cotton\CollectionCenterController@discountModal')->middleware('auth');
-Route::get('addOperator', 'Cotton\CollectionCenterController@addOperator')->middleware('auth');
-Route::get('addLicence', 'Cotton\CollectionCenterController@addLicence')->middleware('auth');
-Route::resource('top_up_operator', 'Cotton\TopUpOperatorController')->middleware('auth');
-Route::get('complete_operator', 'Cotton\TopUpOperatorController@complete_operator')->middleware('auth');
-Route::get('complete_center', 'Cotton\TopUpCenterController@complete_center')->middleware('auth');
-Route::get('top_up_operator_approve/{id}', 'Cotton\TopUpOperatorController@approve')->name('operator.approve')->middleware('auth');
-Route::get('findOperator', 'Cotton\TopUpOperatorController@findOperator')->middleware('auth');
-Route::get('findCenter', 'Cotton\TopUpCenterController@findCenter')->middleware('auth');
-Route::get('findCenterName', 'Cotton\TopUpCenterController@findCenterName')->middleware('auth');
-Route::resource('top_up_center', 'Cotton\TopUpCenterController')->middleware('auth');
-Route::get('top_up_center_approve/{id}', 'Cotton\TopUpCenterController@approve')->name('center.approve')->middleware('auth');
-Route::resource('cotton_list', 'Cotton\CottonController')->middleware('auth');
-Route::resource('levy_list', 'Cotton\LevyController')->middleware('auth');
-Route::resource('purchase_cotton', 'Cotton\PurchaseCottonController')->middleware('auth');
-Route::get('findStock', 'Cotton\PurchaseCottonController@findStock')->middleware('auth'); 
-Route::get('findCottonPrice', 'Cotton\PurchaseCottonController@findPrice')->middleware('auth'); 
-Route::get('cotton_approve/{id}', 'Cotton\PurchaseCottonController@approve')->name('cotton.approve')->middleware('auth'); 
-Route::get('cotton_cancel/{id}', 'Cotton\PurchaseCottonController@cancel')->name('cotton.cancel')->middleware('auth'); 
-Route::get('cotton_receive/{id}', 'Cotton\PurchaseCottonController@receive')->name('cotton.receive')->middleware('auth'); ; 
-Route::get('cotton_pdfview',array('as'=>'cotton_pdfview','uses'=>'Cotton\PurchaseCottonController@inv_pdfview'))->middleware('auth');
-Route::resource('cotton_movement', 'Cotton\GoodMovementController')->middleware('auth');
-Route::get('cotton_movement_approve/{id}', 'Cotton\GoodMovementController@approve')->name('movement.approve')->middleware('auth'); 
-Route::get('cotton_check_balance', 'Cotton\GoodMovementController@chekBalance')->name('movement.chekBalance')->middleware('auth'); 
-Route::get('findQuantity', 'Cotton\GoodMovementController@findQuantity')->middleware('auth'); 
-Route::get('findPurchase', 'Cotton\GoodMovementController@findPurchase')->middleware('auth'); 
-Route::get('itemsModal', 'Cotton\GoodMovementController@discountModal')->middleware('auth');
-Route::get('reverseCenterModal', 'Cotton\TopUpCenterController@discountModal')->middleware('auth');
-Route::post('newreverseCenter', 'Cotton\TopUpCenterController@newdiscount')->middleware('auth');
-Route::get('center_complete/{id}', 'Cotton\TopUpCenterController@complete')->name('center.complete')->middleware('auth'); 
-Route::get('reverse_top_up_center', 'Cotton\TopUpCenterController@reverse_top_center')->middleware('auth'); 
-Route::get('reverseOperatorModal', 'Cotton\TopUpOperatorController@discountModal')->middleware('auth');
-Route::post('newreverseOperator', 'Cotton\TopUpOperatorController@newdiscount')->middleware('auth');
-Route::get('operator_complete/{id}', 'Cotton\TopUpOperatorController@complete')->name('operator.complete')->middleware('auth'); 
-Route::get('reverse_top_up_operator', 'Cotton\TopUpOperatorController@reverse_top_operator')->middleware('auth'); 
+// Route::group(['prefix' => 'cotton_collection'], function () {
+// Route::get('production_pdfview',array('as'=>'production_pdfview','uses'=>'Cotton\ProductionController@inv_pdfview'))->middleware('auth');
+// Route::resource('operator', 'Cotton\OperatorController')->middleware('auth');
+// Route::resource('collection_center', 'Cotton\CollectionCenterController')->middleware('auth');
+// Route::resource('district', 'Cotton\DistrictController')->middleware('auth');
+// Route::get('findCenterDistrict', 'Cotton\CollectionCenterController@findRegion')->middleware('auth');
+// Route::get('findCenterRegion', 'Cotton\CollectionCenterController@findDistrict')->middleware('auth');
+// Route::get('centerModal', 'Cotton\CollectionCenterController@discountModal')->middleware('auth');
+// Route::get('addOperator', 'Cotton\CollectionCenterController@addOperator')->middleware('auth');
+// Route::get('addLicence', 'Cotton\CollectionCenterController@addLicence')->middleware('auth');
+// Route::resource('top_up_operator', 'Cotton\TopUpOperatorController')->middleware('auth');
+// Route::get('complete_operator', 'Cotton\TopUpOperatorController@complete_operator')->middleware('auth');
+// Route::get('complete_center', 'Cotton\TopUpCenterController@complete_center')->middleware('auth');
+// Route::get('top_up_operator_approve/{id}', 'Cotton\TopUpOperatorController@approve')->name('operator.approve')->middleware('auth');
+// Route::get('findOperator', 'Cotton\TopUpOperatorController@findOperator')->middleware('auth');
+// Route::get('findCenter', 'Cotton\TopUpCenterController@findCenter')->middleware('auth');
+// Route::get('findCenterName', 'Cotton\TopUpCenterController@findCenterName')->middleware('auth');
+// Route::resource('top_up_center', 'Cotton\TopUpCenterController')->middleware('auth');
+// Route::get('top_up_center_approve/{id}', 'Cotton\TopUpCenterController@approve')->name('center.approve')->middleware('auth');
+// Route::resource('cotton_list', 'Cotton\CottonController')->middleware('auth');
+// Route::resource('levy_list', 'Cotton\LevyController')->middleware('auth');
+// Route::resource('purchase_cotton', 'Cotton\PurchaseCottonController')->middleware('auth');
+// Route::get('findStock', 'Cotton\PurchaseCottonController@findStock')->middleware('auth'); 
+// Route::get('findCottonPrice', 'Cotton\PurchaseCottonController@findPrice')->middleware('auth'); 
+// Route::get('cotton_approve/{id}', 'Cotton\PurchaseCottonController@approve')->name('cotton.approve')->middleware('auth'); 
+// Route::get('cotton_cancel/{id}', 'Cotton\PurchaseCottonController@cancel')->name('cotton.cancel')->middleware('auth'); 
+// Route::get('cotton_receive/{id}', 'Cotton\PurchaseCottonController@receive')->name('cotton.receive')->middleware('auth'); ; 
+// Route::get('cotton_pdfview',array('as'=>'cotton_pdfview','uses'=>'Cotton\PurchaseCottonController@inv_pdfview'))->middleware('auth');
+// Route::resource('cotton_movement', 'Cotton\GoodMovementController')->middleware('auth');
+// Route::get('cotton_movement_approve/{id}', 'Cotton\GoodMovementController@approve')->name('movement.approve')->middleware('auth'); 
+// Route::get('cotton_check_balance', 'Cotton\GoodMovementController@chekBalance')->name('movement.chekBalance')->middleware('auth'); 
+// Route::get('findQuantity', 'Cotton\GoodMovementController@findQuantity')->middleware('auth'); 
+// Route::get('findPurchase', 'Cotton\GoodMovementController@findPurchase')->middleware('auth'); 
+// Route::get('itemsModal', 'Cotton\GoodMovementController@discountModal')->middleware('auth');
+// Route::get('reverseCenterModal', 'Cotton\TopUpCenterController@discountModal')->middleware('auth');
+// Route::post('newreverseCenter', 'Cotton\TopUpCenterController@newdiscount')->middleware('auth');
+// Route::get('center_complete/{id}', 'Cotton\TopUpCenterController@complete')->name('center.complete')->middleware('auth'); 
+// Route::get('reverse_top_up_center', 'Cotton\TopUpCenterController@reverse_top_center')->middleware('auth'); 
+// Route::get('reverseOperatorModal', 'Cotton\TopUpOperatorController@discountModal')->middleware('auth');
+// Route::post('newreverseOperator', 'Cotton\TopUpOperatorController@newdiscount')->middleware('auth');
+// Route::get('operator_complete/{id}', 'Cotton\TopUpOperatorController@complete')->name('operator.complete')->middleware('auth'); 
+// Route::get('reverse_top_up_operator', 'Cotton\TopUpOperatorController@reverse_top_operator')->middleware('auth'); 
 
 
-Route::resource('general_report_table', 'Cotton\ReportController')->middleware('auth');
-Route::resource('cotton_client', 'Cotton\CottonClientController')->middleware('auth');
+// Route::resource('general_report_table', 'Cotton\ReportController')->middleware('auth');
+// Route::resource('cotton_client', 'Cotton\CottonClientController')->middleware('auth');
 
-Route::get('findSalesPrice', 'Cotton\InvoiceController@findPrice')->middleware('auth'); 
-Route::get('cotton_payment/{id}', 'Cotton\InvoiceController@make_payment')->name('invoice.pay')->middleware('auth'); 
-Route::get('sales_pdfview',array('as'=>'sales_pdfview','uses'=>'Cotton\InvoiceController@sales_pdfview'))->middleware('auth');
-Route::resource('cotton_sales_payment', 'Cotton\InvoicePaymentController')->middleware('auth');
+// Route::get('findSalesPrice', 'Cotton\InvoiceController@findPrice')->middleware('auth'); 
+// Route::get('cotton_payment/{id}', 'Cotton\InvoiceController@make_payment')->name('invoice.pay')->middleware('auth'); 
+// Route::get('sales_pdfview',array('as'=>'sales_pdfview','uses'=>'Cotton\InvoiceController@sales_pdfview'))->middleware('auth');
+// Route::resource('cotton_sales_payment', 'Cotton\InvoicePaymentController')->middleware('auth');
 
-Route::get('findSeedPrice', 'Cotton\SeedInvoiceController@findPrice')->middleware('auth'); 
-Route::get('seed_payment/{id}', 'Cotton\SeedInvoiceController@make_payment')->name('seed.pay')->middleware('auth'); 
-Route::get('seed_pdfview',array('as'=>'seed_pdfview','uses'=>'Cotton\SeedInvoiceController@seed_pdfview'))->middleware('auth');
-Route::resource('seed_sales_payment', 'Cotton\SeedPaymentController')->middleware('auth');
-Route::resource('assign_driver', 'Cotton\AssignDriverController')->middleware('auth');
-Route::get('assign_driver_approve/{id}', 'Cotton\AssignDriverController@approve')->name('assign_driver.approve')->middleware('auth'); 
-Route::post('newreverseDriver', 'Cotton\AssignDriverController@newdiscount')->middleware('auth');
-Route::get('reverse_assign_driver', 'Cotton\AssignDriverController@reverse_assign_driver')->middleware('auth'); 
-Route::resource('assign_center', 'Cotton\AssignCenterController')->middleware('auth');
-Route::get('assign_center_approve/{id}', 'Cotton\AssignCenterController@approve')->name('assign_center.approve')->middleware('auth'); 
-Route::post('newreverseAssignCenter', 'Cotton\AssignCenterController@newdiscount')->middleware('auth');
-Route::get('reverse_assign_center', 'Cotton\AssignCenterController@reverse_assign_center')->middleware('auth'); 
-});
+// Route::get('findSeedPrice', 'Cotton\SeedInvoiceController@findPrice')->middleware('auth'); 
+// Route::get('seed_payment/{id}', 'Cotton\SeedInvoiceController@make_payment')->name('seed.pay')->middleware('auth'); 
+// Route::get('seed_pdfview',array('as'=>'seed_pdfview','uses'=>'Cotton\SeedInvoiceController@seed_pdfview'))->middleware('auth');
+// Route::resource('seed_sales_payment', 'Cotton\SeedPaymentController')->middleware('auth');
+// Route::resource('assign_driver', 'Cotton\AssignDriverController')->middleware('auth');
+// Route::get('assign_driver_approve/{id}', 'Cotton\AssignDriverController@approve')->name('assign_driver.approve')->middleware('auth'); 
+// Route::post('newreverseDriver', 'Cotton\AssignDriverController@newdiscount')->middleware('auth');
+// Route::get('reverse_assign_driver', 'Cotton\AssignDriverController@reverse_assign_driver')->middleware('auth'); 
+// Route::resource('assign_center', 'Cotton\AssignCenterController')->middleware('auth');
+// Route::get('assign_center_approve/{id}', 'Cotton\AssignCenterController@approve')->name('assign_center.approve')->middleware('auth'); 
+// Route::post('newreverseAssignCenter', 'Cotton\AssignCenterController@newdiscount')->middleware('auth');
+// Route::get('reverse_assign_center', 'Cotton\AssignCenterController@reverse_assign_center')->middleware('auth'); 
+// });
 
 //tracking
 Route::group(['prefix' => 'tracking'], function () {

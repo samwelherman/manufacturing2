@@ -5,7 +5,7 @@
 <section class="section">
     <div class="section-body">
         <div class="row">
-            <div class="col-12 col-sm-6 col-lg-12">
+            <div class="col-12 col-sm-124 col-lg-12">
                 <div class="card">
                     <div class="card-header">
                         <h4>Good Movement</h4>
@@ -60,7 +60,12 @@
                                                     <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
                                                     aria-label="CSS grade: activate to sort column ascending"
-                                                    style="width: 98.1094px;">Mechanical</th>
+                                                    style="width: 98.1094px;">Resposible Person</th>
+
+                                                    <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
+                                                    rowspan="1" colspan="1"
+                                                    aria-label="CSS grade: activate to sort column ascending"
+                                                    style="width: 98.1094px;">Status</th>
                                                    
                                                 <th class="sorting" tabindex="0" aria-controls="DataTables_Table_0"
                                                     rowspan="1" colspan="1"
@@ -75,12 +80,7 @@
                                                 <th>{{ $loop->iteration }}</th>
                                                 <td>{{Carbon\Carbon::parse($row->date)->format('M d, Y')}}</td>
                                                 <td>
-                                                    @php    
-                                                    $it=App\Models\Inventory::where('id', $row->item_id)->get();   
-                                                  @endphp
-                                                     @foreach($it as $i)
-                                                     {{$i->name}}
-                                                    @endforeach
+                                                    {{ $row->items->name }}
                                                 </td>
                                                
                                                 <td>{{ $row->quantity }}</td>
@@ -113,22 +113,31 @@
                                                     {{$s->name}}
                                                     @endforeach
                                                 </td>
+                                                <td>
+                                                    @if($row->status == 0)
+                                                    <div class="badge badge-warning badge-shadow">Not Approved</div>
+                                                    @elseif($row->status == 1)
+                                                    <div class="badge badge-success badge-shadow">Approved</div>
+                                                    @endif
+                                                </td>
 
                                                       <td>
                                                  @if($row->status == 0)
+                                                 <div class="form-inline">
                                              <a class="btn btn-xs btn-outline-primary text-uppercase px-2 rounded"
-                                                    href="{{ route("movement.approve", $row->id)}}" title="Approve" onclick="return confirm('Are you sure?')">
-                                                    <i class="fa fa-check"></i>
+                                                    href="{{ route("good_movement.approve", $row->id)}}" title="Approve" onclick="return confirm('Are you sure?')">
+                                                    <i class="icon-check"></i>
                                                 </a>
                                                     <a class="btn btn-xs btn-outline-info text-uppercase px-2 rounded"
                                                         href="{{ route("good_movement.edit", $row->id)}}">
-                                                        <i class="fa fa-edit"></i>
+                                                        <i class="icon-pencil7"></i>
                                                     </a>
                                                    
                                                     {!! Form::open(['route' => ['good_movement.destroy',$row->id],
                                                     'method' => 'delete']) !!}
-                                                    {{ Form::button('<i class="fa fa-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-xs btn-outline-danger text-uppercase px-2 rounded demo4', 'title' => 'Delete', 'onclick' => "return confirm('Are you sure?')"]) }}
+                                                    {{ Form::button('<i class="icon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-xs btn-outline-danger text-uppercase px-2 rounded demo4', 'title' => 'Delete', 'onclick' => "return confirm('Are you sure?')"]) }}
                                                     {{ Form::close() }}
+                                                    </div>
                                            @endif
                                                 </td>
                                             </tr>
@@ -169,7 +178,7 @@
                                                             value="{{ isset($data) ? $data->date : ''}}"
                                                             class="form-control" required>
                                                     </div>
-                                                    <label class="col-lg-2 col-form-label">Mechanical</label>
+                                                    <label class="col-lg-2 col-form-label">Resposible Person</label>
                                                     <div class="col-lg-4">
                                                      <select class="form-control type" name="staff" required
                                                          id="">

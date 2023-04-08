@@ -192,7 +192,7 @@
                             @endcan
 
                            
-                        <!--
+                        
 
                             @can('view-manufacture')
                                 <li class="nav-item"><a
@@ -214,11 +214,24 @@
                                         class="nav-link {{ request()->is('inventory/good_reallocation*') ? 'active' : '' }}"
                                         href="{{ url('inventory/good_reallocation') }}">Good
                                         Reallocation</a></li>
-                            @endcan -->
+                            @endcan 
+
+                            @can('view-manufacture')
+                                <li class="nav-item"><a
+                                        class="nav-link {{ request()->is('manufacturing/screp*') ? 'active' : '' }}"
+                                        href="{{ url('manufacturing/screp') }}">Manage Screp
+                                        </a></li>
+                            @endcan
 
                         </ul>
                     </li>
                 @endcan
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->is('manufacturing/good_movement*') ? 'active' : '' }}"
+                     href="{{ url('inventory/good_movement') }}">
+                    <i class="icon-store"></i><span>Product Movement</span>
+                    </a>
+                </li>
 
                 @can('manage-report')
                     <li class="nav-item nav-item-submenu">

@@ -677,6 +677,7 @@ class InvoiceController extends Controller
     $store_items = Store_Items::where('items_id', $item)->where('location_id', $location)->first();
    if(empty($location) || empty($item)){
     $price = " ";
+    dd($location);
    }
     elseif (empty($store_items)) {
       $price = "Your Stock Balance is Zero. ";

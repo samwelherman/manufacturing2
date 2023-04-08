@@ -7,10 +7,20 @@ use App\Models\FieldStaff;
 use App\Models\GoodMovement;
 use App\Models\Inventory;
 use App\Models\Location;
+use App\Models\Manufacturing\Movement;
+use App\Models\Manufacturing\Store_Items;
+use App\Models\POS\Items;
 use Illuminate\Http\Request;
 
 class GoodMovementController extends Controller
 {
+    protected $movement_model;
+
+    public function __construct($movement_model = null)
+    {
+        $this->movement_model = new Movement();
+
+    }
     /**
      * Display a listing of the resource.
      *
@@ -19,7 +29,7 @@ class GoodMovementController extends Controller
     public function index()
     {
         //
-        $inventory= Inventory::all();
+        $inventory= Items::all();
         $staff=FieldStaff::all();
         $location=Location::all();
         $movement= GoodMovement::all();
@@ -48,13 +58,14 @@ class GoodMovementController extends Controller
         $data = $request->all();
         $data['added_by']=auth()->user()->id;
 
-        $inv=Inventory::where('id',$request->item_id)->first();
+        $store_balance = Store_Items::where('location_id',$request->source_location)->where('items_id',$request->item_id)->get()->first();
 
-        if(($request->quantity <= $inv->quantity)){  
+        if ($store_balance->quantity >= $request->quantity) {
+
         $movement= GoodMovement::create($data);
-  
-        $q=$inv->quantity -$request->quantity;
-        Inventory::where('id',$request->item_id)->update(['quantity' => $q]);
+
+        $this->movement_model->create_item_movement($request->source_location,$request->destination_location,$request->item_id,$request->quantity,$movement->id);
+      
         return redirect(route('good_movement.index'))->with(['success'=>'Good Movement Created Successfully']);
         }
 
