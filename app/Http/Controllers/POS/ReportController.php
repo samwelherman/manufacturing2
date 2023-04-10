@@ -52,6 +52,18 @@ $data=Items::where('added_by',auth()->user()->added_by)->where('quantity','>', '
     
     }
 
+    public function production_report(Request $request)
+    {
+       
+$data=Items::where('added_by',auth()->user()->added_by)->where('quantity','>', '0')->get();
+     $start_date = $request->start_date;
+        $end_date = $request->end_date;    
+
+        return view('pos.report.production_report',
+             compact('data','start_date','end_date'));
+    
+    }
+
 public function good_issue_report(Request $request)
     {
        

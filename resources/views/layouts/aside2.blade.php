@@ -274,6 +274,18 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="nav-item nav-item-submenu">
+                                    <a href="#"
+                                        class="nav-link {{ request()->is('reports/inventory_report*') ? 'active' : '' }}">Manufacturing
+                                        Report</a>
+                                    <ul class="nav nav-group-sub">
+                                        <li class="nav-item"><a
+                                                class="nav-link {{ request()->is('reports/inventory_report/production_report*') ? 'active' : '' }}"
+                                                href="{{ url('reports/inventory_report/production_report') }}"><i></i></i>Daily Production 
+                                                 Report</a></li>
+                                      
+                                    </ul>
+                                </li>
                             @endcan
 
                           

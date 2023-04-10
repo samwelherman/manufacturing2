@@ -74,6 +74,13 @@ class ScrepController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $data ['wasted'] = $request->wasted;
+        $data['balance'] = $request->balance;
+        $data['status'] = 1;
+        $screp = Screp::find($id);
+        $screp->update($data);
+
+        return redirect()->back();
     }
 
     /**

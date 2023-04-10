@@ -5,7 +5,7 @@
     <section class="section">
         <div class="section-body">
             <div class="row">
-                <div class="col-12 col-sm-6 col-lg-12">
+                <div class="col-12 col-sm-12 col-lg-12">
                     <div class="card">
                         <div class="card-header">
                             <h4>Screps</h4>
@@ -106,16 +106,11 @@
                                                             <td>
                                                                 @if ($row->status == 0)
                                                                     <div class="badge badge-danger badge-shadow">Not
-                                                                        Approved</div>
+                                                                        Cleared</div>
                                                                 @elseif($row->status == 1)
-                                                                    <div class="badge badge-warning badge-shadow">Approved
+                                                                    <div class="badge badge-success badge-shadow">Cleared
                                                                     </div>
-                                                                @elseif($row->status == 2)
-                                                                    <div class="badge badge-info badge-shadow">Released
-                                                                    </div>
-                                                                @elseif($row->status == 3)
-                                                                    <span
-                                                                        class="badge badge-success badge-shadow">Produced</span>
+                                                                
                                                                 @endif
                                                             </td>
                                                             <td>
@@ -141,21 +136,10 @@
 
                                                                         <div class="dropdown-menu">
 
-                                                                            @if ($row->status == 0)
-                                                                                <li> <a class="nav-link" id="profile-tab2"
-                                                                                        href="{{ route('work_order.approve', $row->id) }}"
-                                                                                        role="tab"
-                                                                                        aria-selected="false">Approve
-                                                                                        Production Order</a>
-                                                                                </li>
-                                                                            @elseif($row->status == 1)
-                                                                                <li> <a class="nav-link" id="profile-tab2"
-                                                                                        href="{{ route('work_order.release', $row->id) }}"
-                                                                                        role="tab"
-                                                                                        aria-selected="false">Release
-                                                                                        Production Order</a>
-                                                                                </li>
-                                                                            @elseif($row->status == 2)
+                                                                         
+                                                                           
+                                                                                
+                                                                            
                                                                                 <li><a class="nav-link" href=""
                                                                                         data-toggle="modal" href=""
                                                                                         value="{{ $row->id }}"
@@ -170,16 +154,7 @@
                                                                                         aria-selected="false">Finish
                                                                                         Production</a>
                                                                                 </li>
-                                                                            @elseif($row->status == 3)
-                                                                                <li><a class="nav-link" href=""
-                                                                                        data-toggle="modal" href=""
-                                                                                        value="{{ $row->id }}"
-                                                                                        data-type="overhead"
-                                                                                        data-target="#appFormModal"
-                                                                                        onclick="model({{ $row->id }},'overhead')">Overhead
-                                                                                        Cost</a>
-                                                                                </li>
-                                                                            @endif
+                                                                       
                                                                         </div>
                                                                     </div>
 

@@ -1414,6 +1414,7 @@ Route::get('restaurant_issue_pdfview',array('as'=>'restaurant_issue_pdfview','us
        
 Route::group(['prefix' => 'inventory_report'], function () {
 Route::any('purchase_report', 'POS\ReportController@purchase_report')->middleware('auth');
+Route::any('production_report', 'POS\ReportController@production_report')->middleware('auth');
 Route::any('good_issue_report', 'POS\ReportController@good_issue_report')->middleware('auth');
 Route::any('sales_report', 'POS\ReportController@sales_report')->middleware('auth');
 Route::any('balance_report', 'POS\ReportController@balance_report')->middleware('auth');
