@@ -314,7 +314,7 @@ $total+= $inv->cost_price *  $i->quantity;
 
   $d=$issue->date;
 
-$codes= AccountCodes::where('account_name','Truck Maintenance and Service')->where('added_by', auth()->user()->added_by)->first();
+$codes= AccountCodes::where('account_name','Truck Maintenance and Service')->first();
   $journal = new JournalEntry();
   $journal->account_id = $codes->id;
    $date = explode('-',$d);

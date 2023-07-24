@@ -51,8 +51,8 @@ class PurchaseController extends Controller
         $currency = Currency::all();
         $purchases = Purchase::where('added_by', auth()->user()->added_by)->get();
         $supplier = Supplier::where('user_id', auth()->user()->added_by)->get();;
-        $name = Items::whereIn('type', [3])->where('added_by', auth()->user()->added_by)->get();;
-        $location = Location::where('type', 3)->where('added_by', auth()->user()->added_by)->get();;
+        $name = Items::whereIn('type', [3])->get();;
+        $location = Location::where('type', 3)->get();;
         $type = "";
         return view('pos.purchases.index', compact('name', 'supplier', 'currency', 'purchases', 'location', 'type'));
     }
@@ -182,10 +182,12 @@ class PurchaseController extends Controller
     public function edit($id)
     {
         //
+        $name = Items::whereIn('type', [3])->get();;
+
         $currency = Currency::all();
         $supplier = Supplier::where('user_id', auth()->user()->added_by)->get();;
-        $name = Items::whereIn('type', [1, 4])->where('added_by', auth()->user()->added_by)->get();;
-        $location = Location::where('type', 3)->where('added_by', auth()->user()->added_by)->get();;
+        $name = Items::whereIn('type', [3])->get();;
+        $location = Location::where('type', 3)->get();;
         $data = Purchase::find($id);
         $items = PurchaseItems::where('purchase_id', $id)->get();
         $type = "";
@@ -335,7 +337,7 @@ class PurchaseController extends Controller
 
             $inv = Purchase::find($id);
             $supp = Supplier::find($inv->supplier_id);
-            $cr = AccountCodes::where('account_name', 'Purchases')->where('added_by', auth()->user()->added_by)->first();
+            $cr = AccountCodes::where('account_name', 'Purchases')->first();
             $journal = new JournalEntry();
             $journal->account_id = $cr->id;
             $date = explode('-', $inv->purchase_date);
@@ -353,7 +355,7 @@ class PurchaseController extends Controller
             $journal->save();
 
             if ($inv->purchase_tax > 0) {
-                $tax = AccountCodes::where('account_name', 'VAT IN')->where('added_by', auth()->user()->added_by)->first();
+                $tax = AccountCodes::where('account_name', 'VAT IN')->first();
                 $journal = new JournalEntry();
                 $journal->account_id = $tax->id;
                 $date = explode('-', $inv->purchase_date);
@@ -371,7 +373,7 @@ class PurchaseController extends Controller
                 $journal->save();
             }
 
-            $codes = AccountCodes::where('account_name', 'Payables')->where('added_by', auth()->user()->added_by)->first();
+            $codes = AccountCodes::where('account_name', 'Payables')->first();
             $journal = new JournalEntry();
             $journal->account_id = $codes->id;
             $date = explode('-', $inv->purchase_date);
@@ -584,8 +586,8 @@ class PurchaseController extends Controller
         //
         $currency = Currency::all();
         $supplier = Supplier::where('user_id', auth()->user()->added_by)->get();;
-        $name = Items::where('type', 3)->where('added_by', auth()->user()->added_by)->get();;
-        $location = Location::where('type', 3)->where('added_by', auth()->user()->added_by)->get();;
+        $name = Items::where('type', 3)->get();;
+        $location = Location::where('type', 3)->get();;
         $data = Purchase::find($id);
         $items = PurchaseItems::where('purchase_id', $id)->get();
         $type = "receive";
@@ -603,7 +605,7 @@ class PurchaseController extends Controller
         //
         $invoice = Purchase::find($id);
         $payment_method = Payment_methodes::all();
-        $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->where('added_by', auth()->user()->added_by)->get();
+        $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->get();
         return view('pos.purchases.purchase_payments', compact('invoice', 'payment_method', 'bank_accounts'));
     }
 
@@ -674,7 +676,7 @@ class PurchaseController extends Controller
             } else if ($search_type == 'period') {
                 $start_date = $request->start_date;
                 $end_date = $request->end_date;
-                $check_existing_payment = Activity::all()->where('added_by', auth()->user()->added_by)->whereBetween('date', [$start_date, $end_date]);
+                $check_existing_payment = Activity::all()->whereBetween('date', [$start_date, $end_date]);
             } elseif ($search_type == 'activities') {
                 $check_existing_payment = Activity::where('added_by', auth()->user()->added_by)->get();
             }

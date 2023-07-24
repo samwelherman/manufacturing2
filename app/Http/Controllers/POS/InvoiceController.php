@@ -48,10 +48,10 @@ class InvoiceController extends Controller
   {
     //
     $currency = Currency::all();
-    $invoices = Invoice::all()->where('invoice_status', 1)->where('added_by', auth()->user()->added_by);
+    $invoices = Invoice::all()->where('invoice_status', 1);
     $client = Client::where('user_id', auth()->user()->added_by)->get();
-    $name = Items::whereIn('type', [2])->where('added_by', auth()->user()->added_by)->get();
-    $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->where('added_by', auth()->user()->added_by)->get();
+    $name = Items::whereIn('type', [2])->get();
+    $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->get();
     //$location=Location::where('added_by',auth()->user()->added_by)->get();;
     $location = Location::where('type', 2)->get();
     $type = "";
@@ -171,7 +171,7 @@ class InvoiceController extends Controller
   {
     //
     $invoices = Invoice::find($id);
-    $invoice_items = InvoiceItems::where('invoice_id', $id)->where('due_quantity', '>', '0')->get();
+    $invoice_items = InvoiceItems::where('invoice_id', $id)->get();
     $payments = InvoicePayments::where('invoice_id', $id)->get();
 
     return view('pos.sales.invoice_details', compact('invoices', 'invoice_items', 'payments'));
@@ -188,10 +188,10 @@ class InvoiceController extends Controller
     //
     $currency = Currency::all();
     $client = Client::where('user_id', auth()->user()->added_by)->get();
-    $name = Items::whereIn('type', [1, 4])->where('added_by', auth()->user()->added_by)->get();
+    $name = Items::whereIn('type', [1, 4])->get();
     $data = Invoice::find($id);
     $items = InvoiceItems::where('invoice_id', $id)->get();
-    $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->where('added_by', auth()->user()->added_by)->get();
+    $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->get();
     //$location=Location::where('added_by',auth()->user()->added_by)->get();;
     $location = LocationManager::where('manager', auth()->user()->id)->where('disabled', '0')->get();
     $type = "";
@@ -319,7 +319,7 @@ class InvoiceController extends Controller
 
       $inv = Invoice::find($id);
       $supp = Client::find($inv->client_id);
-      $cr = AccountCodes::where('account_name', 'Sales')->where('added_by', auth()->user()->added_by)->first();
+      $cr = AccountCodes::where('account_name', 'Sales')->first();
       $journal = new JournalEntry();
       $journal->account_id = $cr->id;
       $date = explode('-', $inv->invoice_date);
@@ -338,7 +338,7 @@ class InvoiceController extends Controller
       $journal->save();
 
       if ($inv->invoice_tax > 0) {
-        $tax = AccountCodes::where('account_name', 'VAT OUT')->where('added_by', auth()->user()->added_by)->first();
+        $tax = AccountCodes::where('account_name', 'VAT OUT')->first();
         $journal = new JournalEntry();
         $journal->account_id = $tax->id;
         $date = explode('-', $inv->invoice_date);
@@ -357,7 +357,7 @@ class InvoiceController extends Controller
         $journal->save();
       }
 
-      $codes = AccountCodes::where('account_group', 'Receivables')->where('added_by', auth()->user()->added_by)->first();
+      $codes = AccountCodes::where('account_group', 'Receivables')->first();
       $journal = new JournalEntry();
       $journal->account_id = $codes->id;
       $date = explode('-', $inv->invoice_date);
@@ -375,7 +375,7 @@ class InvoiceController extends Controller
       $journal->notes = "Receivables for Sales Invoice No " . $inv->reference_no . " to Client " . $supp->name;
       $journal->save();
 
-      $stock = AccountCodes::where('account_name', 'Inventory')->where('added_by', auth()->user()->added_by)->first();
+      $stock = AccountCodes::where('account_name', 'Inventory')->first();
       $journal = new JournalEntry();
       $journal->account_id =  $stock->id;
       $date = explode('-', $inv->invoice_date);
@@ -393,7 +393,7 @@ class InvoiceController extends Controller
       $journal->notes = "Reduce Stock  for Sales  Invoice No " . $inv->reference_no . " to Client " . $supp->name;
       $journal->save();
 
-      $cos = AccountCodes::where('account_name', 'Cost of Goods Sold')->where('added_by', auth()->user()->added_by)->first();
+      $cos = AccountCodes::where('account_name', 'Cost of Goods Sold')->first();
       $journal = new JournalEntry();
       $journal->account_id =  $cos->id;
       $date = explode('-', $inv->invoice_date);
@@ -469,7 +469,7 @@ class InvoiceController extends Controller
         $journal->save();
 
 
-        $codes = AccountCodes::where('account_group', 'Receivables')->where('added_by', auth()->user()->added_by)->first();
+        $codes = AccountCodes::where('account_group', 'Receivables')->first();
         $journal = new JournalEntry();
         $journal->account_id = $codes->id;
         $date = explode('-', $request->invoice_date);
@@ -760,8 +760,8 @@ class InvoiceController extends Controller
     //
     $currency = Currency::all();
     $client = Client::where('user_id', auth()->user()->added_by)->get();
-    $name = Items::whereIn('type', [2])->where('added_by', auth()->user()->added_by)->get();
-    $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->where('added_by', auth()->user()->added_by)->get();
+    $name = Items::whereIn('type', [2])->get();
+    $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->get();
     $data = Invoice::find($id);
     $items = InvoiceItems::where('invoice_id', $id)->get();
     //$location=Location::where('added_by',auth()->user()->added_by)->get();;
@@ -781,7 +781,7 @@ class InvoiceController extends Controller
     //
     $invoice = Invoice::find($id);
     $payment_method = Payment_methodes::all();
-    $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->where('added_by', auth()->user()->added_by)->get();;
+    $bank_accounts = AccountCodes::where('account_group', 'Cash and Cash Equivalent')->get();;
     return view('pos.sales.invoice_payments', compact('invoice', 'payment_method', 'bank_accounts'));
   }
 

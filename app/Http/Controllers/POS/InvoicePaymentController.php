@@ -72,7 +72,7 @@ class InvoicePaymentController extends Controller
 
                 $supp=Client::find($sales->client_id);
 
-               $cr= AccountCodes::where('id','$request->account_id')->first();
+               $cr= AccountCodes::where('id',$request->account_id)->first();
           $journal = new JournalEntry();
         $journal->account_id = $request->account_id;
         $date = explode('-',$request->date);
