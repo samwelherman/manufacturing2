@@ -682,12 +682,13 @@ Route::any('driver_route/{id}', 'Driver\DriverController@route')->name('driver.r
 
 // Manufacturing routes
 
-// Manufacturing routes
 // Route::group(['middleware' => ['authorization:manage-manufacturing']], function(){
 
     Route::group(['prefix' => 'manufacturing'], function () {
     
       Route::resource('good_movement', 'Manufacturing\GoodMovementController')->middleware('auth');
+
+      Route::get('movement_pdfview',array('as'=>'movement_pdfview','uses'=>'Inventory\GoodMovementController@movement_pdfview'))->middleware('auth');
 
      Route::resource('manufacturing_purchase', 'Manufacturing\PurchaseInventoryController')->middleware('auth');
      Route::resource('product_items', 'Manufacturing\ItemsController')->middleware('auth');
@@ -697,7 +698,12 @@ Route::any('driver_route/{id}', 'Driver\DriverController@route')->name('driver.r
     Route::resource('bill_of_material', 'Manufacturing\BillOfMaterialController')->middleware('auth');
      Route::get('bill_of_material_inv_pdfview',array('as'=>'bill_of_material_inv_pdfview','uses'=>'Manufacturing\BillOfMaterialController@inv_pdfview'))->middleware('auth');
     Route::resource('work_order', 'Manufacturing\WorkOrderController')->middleware('auth');
-    Route::get('workModal', 'Manufacturing\WorkOrderController@discountModal'); 
+    Route::get('workModal', 'Manufacturing\WorkOrderController@discountModal');
+    Route::any('work_order_details/{id}', 'Manufacturing\WorkOrderController@work_order_details')->name('work_order_details'); 
+    Route::get('work_order_pdfview',array('as'=>'work_order_pdfview','uses'=>'Manufacturing\WorkOrderController@pdfview'))->middleware('auth');
+
+ 
+    
     Route::resource('screp', 'Manufacturing\ScrepController')->middleware('auth');
 
     Route::get('findbillProduct', 'Manufacturing\WorkOrderController@findbillProduct')->middleware('auth'); 
@@ -711,6 +717,8 @@ Route::get('manufacturing_cancel/{id}', 'Manufacturing\PurchaseInventoryControll
 Route::get('manufacturing_receive/{id}', 'Manufacturing\PurchaseInventoryController@receive')->name('manufacturing_inventory.receive')->middleware('auth'); 
 Route::get('manufacturing_make_payment/{id}', 'Manufacturing\PurchaseInventoryController@make_payment')->name('manufacturing_inventory.pay')->middleware('auth'); 
 Route::get('manufacturing_inv_pdfview',array('as'=>'manufacturing_inv_pdfview','uses'=>'Manufacturing\PurchaseInventoryController@inv_pdfview'))->middleware('auth');
+
+
 
     Route::any('packing_model/{$id}', 'Manufacturing\BillOfMaterialController@packing_model')->name('packing_model')->middleware('auth');
     

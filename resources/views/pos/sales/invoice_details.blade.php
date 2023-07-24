@@ -184,7 +184,7 @@ $settings= App\Models\System::where('added_by',auth()->user()->added_by)->first(
                                          $item_name = App\Models\POS\Items::find($row->item_name);
                                         ?>
                                             <td class=""><strong class="block">@if(!empty($item_name )) {{$item_name->name}} @else  {{$row->item_name}}  @endif</strong></td>
-                                            <td class="">{{ $row->due_quantity }} </td>
+                                            <td class="">{{ $row->due_amount }} </td>
                                         <td class="">{{number_format($row->price ,2)}}  </td>                                         
                                          <td class="">
                                   @if(!@empty($row->total_tax > 0))

@@ -111,7 +111,7 @@ $settings= App\Models\System::where('added_by',auth()->user()->added_by)->first(
 $items=App\Models\SystemDetails::where('system_id',$settings->id)->get();
 ?>
 <div class="head-title">
-    <h1 class="text-center m-0 p-0">Purchases</h1>
+    <h1 class="text-center m-0 p-0">LPO</h1>
 </div>
 
 
@@ -121,15 +121,15 @@ $items=App\Models\SystemDetails::where('system_id',$settings->id)->get();
         
          <tr>
              <td class="w-50">
-                 <div class="box-text">
-                        <img class="pl-lg" style="width: 233px;height: 120px;" src="{{url('assets/img/logo')}}/{{$settings->picture}}">
+                 <div class="box-text" style="text-align: left;">
+                        <img class="pl-lg" style="width: 150px;height: 120px;" src="{{url('assets/img/logo')}}/{{$settings->picture}}">
                  </div>
              </td>
    
                    <td><div class="box-text">  </div>  </td> <td><div class="box-text">  </div>  </td> <td><div class="box-text">  </div>  </td> <td><div class="box-text">  </div>  </td> <td><div class="box-text">  </div>  </td>
                   
              <td class="w-50">
-                 <div class="box-text">
+                 <div class="box-text" style="text-align: right;">
                     <p> <strong>Reference: {{$purchases->reference_no}}</strong></p>
        <p> <strong>Purchase Date : {{Carbon\Carbon::parse($purchases->purchase_date)->format('d/m/Y')}}</strong></p>
                  </div>
@@ -270,28 +270,7 @@ $items=App\Models\SystemDetails::where('system_id',$settings->id)->get();
 
   <table class="table w-100 mt-20" >
 <tfoot>
-@if(!empty($items))
-@foreach ($items->chunk(2) as $chunk)
-<tr>
-  @foreach ($chunk as $i)
-<?php
-$word_curr= App\Models\Currency::where('code',$i->exchange_code)->first();
-?>
 
-
-         <td style="width: 50%;">
-
-         <div><u> <h3><b> Account Details For {{$word_curr->name}}</b></h3></u> </div>
-         <div><b>Account Name</b>:   {{$i->account_name}}</div>
-        <div><b>Account Number</b>:   {{$i->account_number}} </div>
-        <div><b>Bank Name</b>:  {{$i->bank_name}}</div>
-        <div><b>Branch</b>:  {{$i->branch_name}}</div>
-        <div><b>Swift Code</b>:  {{$i->swift_code}}</div>
-         
- @endforeach
-</tr>  
- @endforeach
-@endif
 
        
     
@@ -302,7 +281,7 @@ $word_curr= App\Models\Currency::where('code',$i->exchange_code)->first();
 </div>
 
 <footer>
-This is a computer generated invoice
+
 </footer>
 </body>
 </html>

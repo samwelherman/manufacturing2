@@ -26,25 +26,33 @@
 
                     <div class="col-lg-10">
                         @if ($purchases->good_receive == 0 && $purchases->status != 4)
+                        @can('edit-purchase')
                             <a class="btn btn-xs btn-primary" onclick="return confirm('Are you sure?')"
                                 href="{{ route('purchase.edit', $purchases->id) }}" title=""> Edit </a>
+                                @endcan
                         @endif
 
                         @if ($purchases->status == 0)
+                        @can('approve-purchase')
                             <a class="btn btn-xs btn-info" title="Convert to Invoice"
                                 onclick="return confirm('Are you sure?')"
                                 href="{{ route('purchase.approve', $purchases->id) }}" title="">Approve Purchase </a>
-                        @endif
+                        @endcan
+                                @endif
 
                         @if ($purchases->status != 0 && $purchases->status != 4 && $purchases->status != 3 && $purchases->good_receive == 1)
-                            <a class="btn btn-xs btn-danger " data-placement="top"
+                        @can('pay-purchase')   
+                        <a class="btn btn-xs btn-danger " data-placement="top"
                                 href="{{ route('purchase.pay', $purchases->id) }}" title="Add Payment"> Pay Purchase </a>
-                        @endif
+                        @endcan
+                                @endif
 
                         @if ($purchases->status != 0 && $purchases->status != 4 && $purchases->status != 3 && $purchases->good_receive == 0)
-                            <a class="btn btn-xs btn-info" data-placement="top"
+                        @can('good-receive')   
+                        <a class="btn btn-xs btn-info" data-placement="top"
                                 href="{{ route('purchase.receive', $purchases->id) }}" title="Good Receive"> Good Receive
                             </a>
+                            @endcan
                         @endif
 
                         <a class="btn btn-xs btn-success"

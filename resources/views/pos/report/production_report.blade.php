@@ -99,58 +99,34 @@
                         </tr>
                         </thead>
                         <tbody>
-
-                          <?php
-            $total=0; 
-            $return=0; 
-               $total_p=0; 
-            $total_r=0; 
-                 $i=0; 
-?>
-
-                        @foreach($data as $key)
-
-                   @php
-
-                     $qty= App\Models\POS\PurchaseHistory::where('item_id', $key->id)->where('type', 'Purchases')->whereBetween('purchase_date',[$start_date,$end_date])->sum('quantity'); 
-                     $rn= App\Models\POS\PurchaseHistory::where('item_id', $key->id)->where('type', 'Debit Note')->whereBetween('purchase_date',[$start_date,$end_date])->sum('quantity');  
-
-                       $tqty= App\Models\POS\PurchaseHistory::where('item_id', $key->id)->where('type', 'Purchases')->whereBetween('purchase_date',[$start_date,$end_date])->sum(\DB::raw('quantity * price'));
-                       $trn= App\Models\POS\PurchaseHistory::where('item_id', $key->id)->where('type', 'Debit Note')->whereBetween('purchase_date',[$start_date,$end_date])->sum(\DB::raw('quantity * price'));
-                            
-
-                                        @endphp 
-                                
-                             @if($qty-$rn > 0)
-
-                            <?php   $i++;  ?>
-                            <tr>
-                         <td>{{ $i }}</td>
-                     <td><a  href="#view{{$key->id}}"  data-toggle="modal" >{{$key->name}}</a></td>
-
-                                     @php                                    
-                                        $total+=$qty;
-                                        $return+=$rn;
-
-                                         $total_p+=$tqty;
-                                        $total_r+=$trn ;
-                                        @endphp 
-
-                              <td>{{number_format($qty-$rn,2)}}</td>
-                            <td>{{number_format($tqty- $trn ,2)}}</td>
-                                                            
-                            </tr>
-                            @endif
-                        @endforeach
-                        </tbody>
+                            @php
+                                $i = 0;
+                            @endphp
+                         @foreach ($data as $row)
+                             <tr>
+                                <td>{{ $i++}}</td>
+                                <td>{{ $row->name }}</td>
+                                <td>{{ $row->dn }}</td>
+                                <td>{{ $row->pn }}</td>
+                                <td>{{ $row->pc_roller }}</td>
+                                <td>{{ $row->length }}</td>
+                                <td>0</td>
+                                <td>{{ $row->sum_day }}</td>
+                                <td>{{ $row->sum_night }}</td>
+                                <td>{{ $row->sum_day + $row->sum_night }}</td>
+                                <td>{{ $row->client_name }}</td>
+                                <td>{{ $row->sum_day + $row->sum_night }}</td>
+                                <td>0</td>
+                             </tr>
+                         @endforeach
                         <tfoot>
-                           <tr>
+                           {{-- <tr>
                                 <td>Total</td>
                      <td></td>
                            <td>{{number_format($total-$return,2)}}</td>
                                 <td>{{number_format($total_p-$total_r,2)}}</td>
                                                             
-                            </tr>
+                            </tr> --}}
                         </tfoot>
                     </table>
                   
