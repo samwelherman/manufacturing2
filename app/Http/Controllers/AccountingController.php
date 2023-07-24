@@ -265,23 +265,23 @@ $balance=0+$request->amount;
         $end_date = $request->end_date;
         $account_id=$request->account_id;
         $chart_of_accounts = [];
-        foreach (AccountCodes::where('account_group','Cash and Cash Equivalent')->where('added_by', auth()->user()->added_by)->get() as $key) {
+        foreach (AccountCodes::where('account_group','Cash and Cash Equivalent')->get() as $key) {
             $chart_of_accounts[$key->id] = $key->account_name;
         }
         if($request->isMethod('post')){
-            $data=JournalEntry::where('reconcile', 0)->where('account_id', $request->account_id)->where('added_by', auth()->user()->added_by)->whereBetween('date',[$start_date,$end_date])->get();
+            $data=JournalEntry::where('reconcile', 0)->where('account_id', $request->account_id)->whereBetween('date',[$start_date,$end_date])->get();
         }else{
             $data=[];
         }
 
         if($request->isMethod('post')){
-            $open_debit=JournalEntry::where('reconcile', 0)->where('account_id', $request->account_id)->where('added_by', auth()->user()->added_by)->where('date','<', $start_date)->sum('debit');
+            $open_debit=JournalEntry::where('reconcile', 0)->where('account_id', $request->account_id)->where('date','<', $start_date)->sum('debit');
         }else{
             $open_debit=[];
         }
 
         if($request->isMethod('post')){
-            $open_credit=JournalEntry::where('reconcile', 0)->where('account_id', $request->account_id)->where('added_by', auth()->user()->added_by)->where('date','<', $start_date)->sum('credit');
+            $open_credit=JournalEntry::where('reconcile', 0)->where('account_id', $request->account_id)->where('date','<', $start_date)->sum('credit');
         }else{
             $open_credit=[];
         }
