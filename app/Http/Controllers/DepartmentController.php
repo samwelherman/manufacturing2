@@ -15,7 +15,7 @@ class DepartmentController extends Controller
     }
     public function index()
     {  
-        $permissions = Departments::all()->where('added_by', auth()->user()->added_by);
+        $permissions = Departments::all();
         return view('manage.department.index', compact('permissions'));
     }
 
