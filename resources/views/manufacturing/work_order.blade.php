@@ -69,7 +69,7 @@
                                                     @foreach ($work_orders as $row)
                                                         <tr class="gradeA even" role="row">
                                                             <th>{{ $loop->iteration }}</th>
-                                                            <td>{{ $row->reference_no }}</td>
+                                                            <td> <a href="{{ route('work_order_details',$row->id) }}">{{ $row->reference_no }}</a>  </td>
 
 
                                                             <td>{{ $row->expected_date }}</td>

@@ -14,7 +14,7 @@
                 background-size: cover;
             }
         </style>
-        <!-- User menu -->
+
         <div class="sidebar-section">
             <div class="sibebarEma">
                 <div class="sidebar-section-body">
@@ -50,7 +50,7 @@
 
 
         </div>
-        <!-- /user menu -->
+
 
 
         <!-- Main navigation -->
@@ -71,81 +71,65 @@
                         </span>
                     </a>
                 </li>
-
+                 
+                @can('view-store')
                 <li class="nav-item">
                     <a class="nav-link {{ request()->is('manufacturing/manufacturing_location*') ? 'active' : '' }}"
-                     href="{{ url('manufacturing/manufacturing_location') }}">
-                    <i class="icon-store"></i><span>Stores</span>
+                        href="{{ url('manufacturing/manufacturing_location') }}">
+                        <i class="icon-store"></i><span>Stores</span>
                     </a>
                 </li>
+                @endcan
 
 
 
-                @can('view-store-purchase')
+                @can('view-purchase')
                     <li class="nav-item nav-item-submenu">
                         <a href="#" class="nav-link"><i class="icon-copy"></i>Purchases</a>
                         <ul class="nav nav-group-sub">
+                            @can('view-items')
                             <li class="nav-item"><a
                                     class="nav-link {{ request()->is('store/purchases/store_items*') ? 'active' : '' }}"
                                     href="{{ url('store/purchases/store_items') }}"><i></i></i>Raw Materials</a>
                             </li>
+                            @endcan
+                            @can('view-supplier')
                             <li class="nav-item"><a
                                     class="nav-link {{ request()->is('store/purchases/store_pos_supplier*') ? 'active' : '' }}"
                                     href="{{ url('store/purchases/store_pos_supplier') }}"><i></i></i>Manage
                                     Suppliers</a></li>
-                            @can('view-pos')
+                                    @endcan
+                            @can('view-purchase')
                                 <li class="nav-item"><a
                                         class="nav-link {{ request()->is('store/purchases/store_purchase*') ? 'active' : '' }}"
                                         href="{{ url('store/purchases/store_purchase') }}"><i></i></i>Manage
                                         Purchases</a></li>
                             @endcan
-                            <!-- <li class="nav-item"><a
-                                    class="nav-link {{ request()->is('store/purchases/creditors_report*') ? 'active' : '' }}"
-                                    href="{{ url('store/purchases/creditors_report') }}"><i></i></i>Creditors
-                                    Report</a></li>
-
-                            <li class="nav-item"><a
-                                    class="nav-link {{ request()->is('store/purchases/store_debit_note*') ? 'active' : '' }}"
-                                    href="{{ url('store/purchases/store_debit_note') }}"><i></i></i>Debit
-                                    Note</a></li>
-                            <li class="nav-item"><a
-                                    class="nav-link {{ request()->is('store/purchases/store_pos_issue*') ? 'active' : '' }}"
-                                    href="{{ url('store/purchases/store_pos_issue') }}"><i></i></i>Good Issue</a>
-                            </li> */
-                            <li class="nav-item"><a
-                                    class="nav-link {{ request()->is('store/pos_activity*') ? 'active' : '' }}"
-                                    href="{{ url('store/pos_activity') }}"><i></i></i>Track POS Activity</a></li> -->
-
-                            <!-- <li class="nav-item"><a class="nav-link {{ request()->is('store/purchases/payments*') ? 'active' : '' }}"
-                                            href="{{ url('store/purchases/payments') }}"><i></i></i>Manage Payments</a></li> -->
+                           
                         </ul>
                     </li>
                 @endcan
 
-                @can('view-store-sales')
+                @can('view-invoice')
                     <li class="nav-item nav-item-submenu">
                         <a href="#" class="nav-link"><i class="icon-copy"></i>Sales</a>
                         <ul class="nav nav-group-sub">
+                            @can('view-client')
                             <li class="nav-item"><a
                                     class="nav-link {{ request()->is('store/sales/store_pos_client*') ? 'active' : '' }}"
                                     href="{{ url('store/sales/store_pos_client') }}"><i></i></i>Clients List</a>
                             </li>
-                            @can('view-pos')
-                                <!--<li class="nav-item"><a class="nav-link {{ request()->is('store/sales/profoma_invoice*') ? 'active' : '' }}"
-                                                                href="{{ url('store/sales/profoma_invoice') }}"><i></i></i>Profoma Invoice</a></li>-->
+                            @endcan
+                            @can('view-invoice')
+
                                 <li class="nav-item"><a
                                         class="nav-link {{ request()->is('store/sales/store_invoice*') ? 'active' : '' }}"
                                         href="{{ url('store/sales/store_invoice') }}"><i></i></i>Invoices</a></li>
                             @endcan
-                            <li class="nav-item"><a
-                                    class="nav-link {{ request()->is('store/sales/debtors_report*') ? 'active' : '' }}"
-                                    href="{{ url('store/sales/debtors_report') }}"><i></i></i>Debtors Report</a>
-                            </li>
-                            <!-- <li class="nav-item"><a class="nav-link {{ request()->is('store/sales/credit_note*') ? 'active' : '' }}"
-                                            href="{{ url('store/sales/credit_note') }}"><i></i></i>Credit Note</a></li>-->
+                          
 
                             <!-- <li class="nav-item"><a class="nav-link {{ request()->is('store/sales/payments*') ? 'active' : '' }}"
-                                            href="{{ url('store/purchases/payments') }}"><i></i></i>Manage Payments</a></li> -->
+                                                href="{{ url('store/purchases/payments') }}"><i></i></i>Manage Payments</a></li> -->
                         </ul>
                     </li>
                 @endcan
@@ -158,69 +142,45 @@
 
 
 
-                @can('manage-manufacture')
+                @can('view-production')
                     <li class="nav-item nav-item-submenu">
                         <a href="#" class="nav-link"><i class="icon-copy"></i> <span>
                                 Manufacturing</span></a>
 
                         <ul class="nav nav-group-sub" data-submenu-title="Layouts">
-                            @can('view-manufacture')
-                              
+                         
+                            @can('view-product')
+                                <li class="nav-item"><a
+                                        class="nav-link {{ request()->is('manufacturing/manufacturing_inventory*') ? 'active' : '' }}"
+                                        href="{{ url('manufacturing/product_items') }}">Product Produced
+                                    </a></li>
                             @endcan
-                              @can('view-manufacture')
-                                                      <li class="nav-item"><a
-                                                                        class="nav-link {{ request()->is('manufacturing/manufacturing_inventory*') ? 'active' : '' }}"
-                                                                        href="{{ url('manufacturing/product_items') }}">Product Produced
-                                                                        </a></li>
-                             @endcan
-                             <!--
-                                            @can('view-manufacture')
-        <li class="nav-item"><a
-                                                                        class="nav-link {{ request()->is('inventory/fieldstaff*') ? 'active' : '' }}"
-                                                                        href="{{ url('inventory/fieldstaff') }}">Field Staff</a></li> -->
-                            @endcan
-                            @can('view-manufacture')
+
+                            
+                            @can('view-bom')
                                 <li class="nav-item"><a
                                         class="nav-link {{ request()->is('manufacturing/bill_of_material*') ? 'active' : '' }}"
                                         href="{{ url('manufacturing/bill_of_material') }}">Bill Of Material</a>
                                 </li>
                             @endcan
-                            @can('view-manufacture')
+                            @can('view-production')
                                 <li class="nav-item"><a
                                         class="nav-link {{ request()->is('manufacturing/work_order*') ? 'active' : '' }}"
-                                        href="{{ url('manufacturing/work_order') }}">Production  Order</a></li>
+                                        href="{{ url('manufacturing/work_order') }}">Production Order</a></li>
                             @endcan
 
-                           
-                        
 
-                            @can('view-manufacture')
-                                <li class="nav-item"><a
-                                        class="nav-link {{ request()->is('inventory/good_issue*') ? 'active' : '' }}"
-                                        href="{{ url('inventory/good_issue') }}">Good Issue</a></li>
-                            @endcan
-                            @can('view-manufacture2')
-                                <li class="nav-item"><a
-                                        class="nav-link {{ request()->is('inventory/good_return*') ? 'active' : '' }}"
-                                        href="{{ url('inventory/good_return') }}">Good Return</a></li>
-                            @endcan
-                            @can('view-manufacture')
-                                <li class="nav-item"><a
-                                        class="nav-link {{ request()->is('inventory/good_movement*') ? 'active' : '' }}"
-                                        href="{{ url('inventory/good_movement') }}">Good Movement</a></li>
-                            @endcan
-                            @can('view-manufacture')
-                                <li class="nav-item"><a
-                                        class="nav-link {{ request()->is('inventory/good_reallocation*') ? 'active' : '' }}"
-                                        href="{{ url('inventory/good_reallocation') }}">Good
-                                        Reallocation</a></li>
-                            @endcan 
 
-                            @can('view-manufacture')
+
+                          
+                       
+                       
+
+                            @can('view-screp')
                                 <li class="nav-item"><a
                                         class="nav-link {{ request()->is('manufacturing/screp*') ? 'active' : '' }}"
                                         href="{{ url('manufacturing/screp') }}">Manage Screp
-                                        </a></li>
+                                    </a></li>
                             @endcan
 
                         </ul>
@@ -228,8 +188,8 @@
                 @endcan
                 <li class="nav-item">
                     <a class="nav-link {{ request()->is('manufacturing/good_movement*') ? 'active' : '' }}"
-                     href="{{ url('inventory/good_movement') }}">
-                    <i class="icon-store"></i><span>Product Movement</span>
+                        href="{{ url('inventory/good_movement') }}">
+                        <i class="icon-store"></i><span>Product Movement</span>
                     </a>
                 </li>
 
@@ -281,21 +241,22 @@
                                     <ul class="nav nav-group-sub">
                                         <li class="nav-item"><a
                                                 class="nav-link {{ request()->is('reports/inventory_report/production_report*') ? 'active' : '' }}"
-                                                href="{{ url('reports/inventory_report/production_report') }}"><i></i></i>Daily Production 
-                                                 Report</a></li>
-                                      
+                                                href="{{ url('reports/inventory_report/production_report') }}"><i></i></i>Daily
+                                                Production
+                                                Report</a></li>
+
                                     </ul>
                                 </li>
                             @endcan
 
-                          
-
-                          
 
 
-                          
 
-                           
+
+
+
+
+
 
                             @can('view-store-report1')
                                 <li class="nav-item nav-item-submenu">
@@ -318,82 +279,83 @@
                                 </li>
                             @endcan
 
-                           
-
-                        
-                </ul>
-                </li>
-            @endcan
 
 
-            <li class="nav-item nav-item-submenu">
-                <a href="#" class="nav-link"><i class="icon-cog7"></i> <span>
-                        {{ __('permission.access_control') }}</span></a>
 
-                <ul class="nav nav-group-sub" data-submenu-title="Layouts">
-
-                    <li class=" nav-item"><a
-                            class="nav-link {{ request()->is('access_control/roleGroup*') ? 'active' : '' }}"
-                            href="{{ url('access_control/roles') }}">
-                            {{ __('permission.roles') }}</a>
+                        </ul>
                     </li>
+                @endcan
 
-                    @can('view-permission')
-                        <li class=" nav-item "><a
+
+                <li class="nav-item nav-item-submenu">
+                    <a href="#" class="nav-link"><i class="icon-cog7"></i> <span>
+                            {{ __('permission.access_control') }}</span></a>
+
+                    <ul class="nav nav-group-sub" data-submenu-title="Layouts">
+
+                        <li class=" nav-item"><a
                                 class="nav-link {{ request()->is('access_control/roleGroup*') ? 'active' : '' }}"
-                                href="{{ url('access_control/permissions') }}">{{ __('permission.permissions') }}</a>
-
+                                href="{{ url('access_control/roles') }}">
+                                {{ __('permission.roles') }}</a>
                         </li>
-                    @endcan
-                    @can('view-user')
-                        <li class="nav-item"><a
-                                class="nav-link {{ request()->is('access_control/system*') ? 'active' : '' }}"
-                                href="{{ url('access_control/system') }}">{{ __('permission.system_setings') }}</a>
 
-                        </li>
-                    @endcan
+                        @can('view-permission')
+                            <li class=" nav-item "><a
+                                    class="nav-link {{ request()->is('access_control/roleGroup*') ? 'active' : '' }}"
+                                    href="{{ url('access_control/permissions') }}">{{ __('permission.permissions') }}</a>
 
-                    @can('view-user')
-                        <li class="nav-item"><a
-                                class="nav-link {{ request()->is('access_control/departments*') ? 'active' : '' }}"
-                                href="{{ url('access_control/departments') }}">Departments
-                            </a></li>
-                    @endcan
+                            </li>
+                        @endcan
+                        @can('view-user')
+                            <li class="nav-item"><a
+                                    class="nav-link {{ request()->is('access_control/system*') ? 'active' : '' }}"
+                                    href="{{ url('access_control/system') }}">{{ __('permission.system_setings') }}</a>
 
-                    @can('view-user')
-                        <li class="nav-item"><a
-                                class="nav-link {{ request()->is('access_control/designations*') ? 'active' : '' }}"
-                                href="{{ url('access_control/designations') }}">Designations
-                            </a></li>
-                    @endcan
+                            </li>
+                        @endcan
 
-                    @can('view-user')
-                        <li class=" nav-item "><a
-                                class="nav-link {{ request()->is('access_control/users*') ? 'active' : '' }}"
-                                href="{{ url('access_control/users') }}">{{ __('permission.user') }}
-                                Management</a></li>
-                    @endcan
+                        @can('view-user')
+                            <li class="nav-item"><a
+                                    class="nav-link {{ request()->is('access_control/departments*') ? 'active' : '' }}"
+                                    href="{{ url('access_control/departments') }}">Departments
+                                </a></li>
+                        @endcan
 
-                    @can('view-user-all')
-                        <li class=" nav-item "><a
-                                class="nav-link {{ request()->is('access_control/users*') ? 'active' : '' }}"
-                                href="{{ url('access_control/users_all') }}">View All Users Details</a></li>
-                    @endcan
+                        @can('view-user')
+                            <li class="nav-item"><a
+                                    class="nav-link {{ request()->is('access_control/designations*') ? 'active' : '' }}"
+                                    href="{{ url('access_control/designations') }}">Designations
+                                </a></li>
+                        @endcan
 
-                    @can('view-user-all')
-                        <li class=" nav-item "><a
-                                class="nav-link {{ request()->is('access_control/users*') ? 'active' : '' }}"
-                                href="{{ url('access_control/affiliate_users_all') }}">View All Affiliate Users</a></li>
-                    @endcan
+                      
+                            <li class=" nav-item "><a
+                                    class="nav-link {{ request()->is('access_control/users*') ? 'active' : '' }}"
+                                    href="{{ url('access_control/users') }}">{{ __('permission.user') }}
+                                    Management</a></li>
+             
 
-                  
+                        @can('view-user-all')
+                            <li class=" nav-item "><a
+                                    class="nav-link {{ request()->is('access_control/users*') ? 'active' : '' }}"
+                                    href="{{ url('access_control/users_all') }}">View All Users Details</a></li>
+                        @endcan
+
+                        @can('view-user-all')
+                            <li class=" nav-item "><a
+                                    class="nav-link {{ request()->is('access_control/users*') ? 'active' : '' }}"
+                                    href="{{ url('access_control/affiliate_users_all') }}">View All Affiliate Users</a>
+                            </li>
+                        @endcan
 
 
-                </ul>
-            </li>
-            
 
-            <!-- /page kits -->
+
+                    </ul>
+                </li>
+
+
+                <!-- /page kits -->
 
 
 

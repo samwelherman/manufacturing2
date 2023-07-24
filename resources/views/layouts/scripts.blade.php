@@ -24,6 +24,15 @@
 
 	<script src="{{asset('global_assets/js/demo_pages/datatables_basic.js')}}"></script>
 
+    <script src="{{asset('global_assets/js/demo_pages/datatables_extension_buttons_init.js')}}"></script>
+
+
+
+
+	<script src="{{asset('global_assets/js/plugins/tables/datatables/extensions/buttons.min.js')}}"></script>
+
+
+
     
    
 <!-- /theme JS files -->
