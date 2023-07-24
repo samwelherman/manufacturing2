@@ -35,11 +35,11 @@ class PermissionServiceProvider extends ServiceProvider
         });
 
         // Module
-        SystemModule::get()->map(function ($module) {
-            Gate::define($module->slug, function ($user) use ($module) {
-                return $user->hasModuleTo($module);
-            });
-        });
+        // SystemModule::get()->map(function ($module) {
+        //     Gate::define($module->slug, function ($user) use ($module) {
+        //         return $user->hasModuleTo($module);
+        //     });
+        // });
 
      
     }

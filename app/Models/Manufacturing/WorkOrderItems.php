@@ -42,5 +42,11 @@ class WorkOrderItems extends Model
    return $this->belongsTo('App\Models\POS\CLient', 'responsible_id');
  }
 
+      
+ public function bill_of_material()
+ {
+   return $this->belongsTo('App\Models\Manufacturing\BillOfMaterial', 'bill_of_material_id');
+ }
+
 
 }

@@ -31,4 +31,15 @@ class GoodMovement extends Model
     {
         return $this->belongsTo('App\Models\POS\Items','item_id');
     }
+
+         
+    public function source()
+    {
+        return $this->belongsTo('App\Models\Location','source_location');
+    }
+
+    public function destination()
+    {
+        return $this->belongsTo('App\Models\Location','destination_location');
+    }
 }

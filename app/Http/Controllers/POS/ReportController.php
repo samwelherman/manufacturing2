@@ -21,6 +21,7 @@ use App\Models\ServiceType;
 use App\Models\POS\Invoice;
 use App\Models\POS\InvoiceItems;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use PDF;
 
 
@@ -54,8 +55,11 @@ $data=Items::where('added_by',auth()->user()->added_by)->where('quantity','>', '
 
     public function production_report(Request $request)
     {
-       
-$data=Items::where('added_by',auth()->user()->added_by)->where('quantity','>', '0')->get();
+
+        $query = "SELECT items.*,w.shift,IF(w.shift = 'Day',SUM(wi.quantity),0) AS sum_day,IF(w.shift = 'Night',SUM(wi.quantity),0) AS sum_night,client.name as client_name from tbl_items items,work_order_items wi,work_orders w,clients client where w.id = wi.work_order_id and client.id = w.responsible_id and wi.product = items.id group by wi.product";
+       $data = DB::select(DB::raw($query));
+
+
      $start_date = $request->start_date;
         $end_date = $request->end_date;    
 
