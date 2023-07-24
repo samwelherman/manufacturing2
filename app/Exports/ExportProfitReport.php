@@ -20,7 +20,7 @@ class  ExportProfitReport implements FromView
 
    public function view() : View
     {
- $codes=AccountCodes::where('account_group','Receivables')->where('added_by', auth()->user()->added_by)->first();
+ $codes=AccountCodes::where('account_group','Receivables')->first();
 
        $purchase=JournalEntry::where('project_id',  $this->name)->where('transaction_type','pos_purchase')->whereBetween('date',[$this->start,$this->end])->where('added_by',auth()->user()->added_by)->sum('credit');         
    $debit = JournalEntry::where('project_id',  $this->name)->where('transaction_type','pos_debit_note')->whereBetween('date',[$this->start,$this->end])->where('added_by',auth()->user()->added_by)->sum('debit');
