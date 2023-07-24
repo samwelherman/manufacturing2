@@ -9,7 +9,7 @@ use App\Models\Manufacturing\WorkOrderItems;
 use App\Models\Manufacturing\Issue;
 // use App\Models\Manufacturing\Location;
 use App\Models\Screp;
-
+use PDF;
 use  App\Models\POS\Items;
 use App\Models\Location;
 use Carbon\Carbon;
@@ -47,20 +47,20 @@ class WorkOrderController extends Controller
     public function index()
     {
         //
-        $data['work_orders'] = WorkOrder::orderBy('id','DESC')->where('added_by', auth()->user()->added_by)->get();
+        $data['work_orders'] = WorkOrder::orderBy('id','DESC')->get();
 
         $data['name'] = BillOfMaterial::all();
 
-        $data['locationWs'] = Location::all()->where('type', 1)->where('added_by', auth()->user()->added_by);
+        $data['locationWs'] = Location::all()->where('type', 1);
 
-        $data['locationFs'] = Location::all()->where('type', 2)->where('added_by', auth()->user()->added_by);
+        $data['locationFs'] = Location::all()->where('type', 2);
 
-        $data['locations'] = Location::all()->where('type', 3)->where('added_by', auth()->user()->added_by);
+        $data['locations'] = Location::all()->where('type', 3);
 
 
         $data['items'] = Items::all()->where('type', 2);
         $data['client'] = Client::where('user_id', auth()->user()->added_by)->get();
-        $data['users'] = User::all()->where('added_by', auth()->user()->added_by);
+        $data['users'] = User::all();
 
         return view('manufacturing.work_order', $data);
     }
@@ -203,13 +203,13 @@ class WorkOrderController extends Controller
         //
         $data['data'] =  WorkOrder::find($id);
         $data['id'] = $id;
-        $data['billofmaterials'] = BillOfMaterial::all()->where('added_by', auth()->user()->added_by);
-        $data['locationWs'] = Location::all()->where('type', 1)->where('added_by', auth()->user()->added_by);
-        $data['locationFs'] = Location::all()->where('type', 2)->where('added_by', auth()->user()->added_by);
-        $data['locations'] = Location::all()->where('type', 3)->where('added_by', auth()->user()->added_by);
+        $data['billofmaterials'] = BillOfMaterial::all();
+        $data['locationWs'] = Location::all()->where('type', 1);
+        $data['locationFs'] = Location::all()->where('type', 2);
+        $data['locations'] = Location::all()->where('type', 3);
         $data['items'] = Items::all()->where('type', 2);
         $data['client'] = Client::where('user_id', auth()->user()->added_by)->get();
-        $data['users'] = User::all()->where('added_by', auth()->user()->added_by);
+        $data['users'] = User::all();
 
 
         return view('manufacturing.work_order', $data);
@@ -595,7 +595,7 @@ class WorkOrderController extends Controller
 
             $d = date('Y-m-d');
 
-            $codes = AccountCodes::where('account_name', 'Inventory')->where('added_by', auth()->user()->added_by)->first();
+            $codes = AccountCodes::where('account_name', 'Inventory')->first();
             $journal = new JournalEntry();
             $journal->account_id = $codes->id;
             $date = explode('-', $d);
@@ -610,7 +610,7 @@ class WorkOrderController extends Controller
             $journal->notes = "Manufacturing Defective Product -  " . $inv->name;
             $journal->save();
 
-            $cr = AccountCodes::where('account_name', 'Defective Item')->where('added_by', auth()->user()->added_by)->first();
+            $cr = AccountCodes::where('account_name', 'Defective Item')->first();
             $journal = new JournalEntry();
             $journal->account_id = $cr->id;
             $date = explode('-', $d);
@@ -648,10 +648,35 @@ class WorkOrderController extends Controller
         }
         
         else if ($type == 'overhead') {
-            $bank_accounts = AccountCodes::where('added_by', auth()->user()->added_by)->where('account_group', 'Cash and Cash Equivalent')->orwhere('account_name', 'Payables')->where('added_by', auth()->user()->added_by)->get();
-            $chart_of_accounts = AccountCodes::where('account_group', '!=', 'Cash and Cash Equivalent')->where('added_by', auth()->user()->added_by)->get();
+            $bank_accounts = AccountCodes::where('added_by', auth()->user()->added_by)->where('account_group', 'Cash and Cash Equivalent')->orwhere('account_name', 'Payables')->get();
+            $chart_of_accounts = AccountCodes::where('account_group', '!=', 'Cash and Cash Equivalent')->get();
             return view('manufacturing.overhead', compact('id', 'bank_accounts', 'chart_of_accounts'));
         }
+    }
+
+    public function work_order_details($id){
+        $data['purchases'] = WorkOrder::find($id);
+        $data['items'] = WorkOrderItems::all()->where('work_order_id', $id);
+
+        return view('manufacturing.work_order_details',$data);
+
+    }
+
+    public function pdfview(Request $request)
+    {
+        //
+        $data['purchases'] = WorkOrder::find($request->id);
+        $data['items'] = WorkOrderItems::all()->where('work_order_id', $request->id);
+
+        
+
+        //view()->share(['purchases' => $purchases, 'purchase_items' => $purchase_items]);
+
+        if ($request->has('download')) {
+            $pdf = PDF::loadView('manufacturing.work_order_details_pdf',$data)->setPaper('a4', 'potrait');
+            return $pdf->download('Work_order REF NO # ' .  $data['purchases']->reference_no . ".pdf");
+        }
+        return view('inv_pdfview');
     }
 
     public function issue(Request $request, $id)

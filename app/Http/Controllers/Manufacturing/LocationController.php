@@ -16,7 +16,7 @@ class LocationController extends Controller
     public function index()
     {
         //
-        $location= Location::all()->where('added_by', auth()->user()->added_by);
+        $location= Location::all();
       
        return view('manufacturing.location',compact('location'));
     }
