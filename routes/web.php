@@ -202,7 +202,7 @@ Route::get('approve_purchase/{id}', 'CF\ProjectController@approve_purchase')->na
     Route::resource('cf_calendar', 'CF\CalendarController')->middleware('auth');
     
     Route::resource('cf_task', 'CF\TaskController')->middleware('auth');
-    Route::get('cf_change_status/{id}/{status}', 'CF\TaskController@change_status')->name('task.change_status')->middleware('auth'); 
+   // Route::get('cf_change_status/{id}/{status}', 'CF\TaskController@change_status')->name('task.change_status')->middleware('auth'); 
     
     Route::get('taskModal', 'CF\TaskController@discountModal')->middleware('auth'); 
     Route::post('assign_user_task', 'CF\TaskController@assign_user')->name('task.assign_user')->middleware('auth');
