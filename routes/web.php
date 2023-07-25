@@ -128,7 +128,7 @@ Route::any('quotationDetails/{id}','orders\OrdersController@quotationDetails')->
 Route::group(['prefix' => 'farming_season'], function () {
 
 Route::resource('/seasson','farming\SeassonController')->middleware('auth');
-Route::resource('/cropslifecycle','farming\CropsLifeCycleController')->middleware('auth');
+//Route::resource('/cropslifecycle','farming\CropsLifeCycleController')->middleware('auth');
 Route::any('editLifeCycle',array('as'=>'editLifeCycle','uses'=>'farming\CropsLifeCycleController@editLifeCycle'))->middleware('auth');
 Route::any('deleteLifeCycle',array('as'=>'deleteLifeCycle','uses'=>'farming\CropsLifeCycleController@deleteLifeCycle'))->middleware('auth');
 Route::get('findFarm',"farming\SeassonController@findFarm" )->middleware('auth');
