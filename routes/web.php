@@ -619,7 +619,7 @@ Route::group(['prefix' => 'logistic_driver'], function () {
 });
 // Manufacturing routes
 // Route::group(['prefix' => 'manufacturing'], function () {
-// Route::resource('manufacturing_location', 'Manufacturing\LocationController')->middleware('auth');
+// Route::resource('manufacturing_location2', 'Manufacturing\LocationController')->middleware('auth');
 // Route::resource('manufacturing_inventory', 'Manufacturing\InventoryController')->middleware('auth');
 // Route::resource('bill_of_material', 'Manufacturing\BillOfMaterialController')->middleware('auth');
 // Route::resource('work_order', 'Manufacturing\WorkOrderController')->middleware('auth');
@@ -639,7 +639,7 @@ Route::group(['prefix' => 'manufacturing'], function () {
   Route::resource('manufacturing_purchase', 'Manufacturing\PurchaseInventoryController')->middleware('auth');
   Route::resource('product_items', 'Manufacturing\ItemsController')->middleware('auth');
 
-  Route::resource('manufacturing_location', 'Manufacturing\LocationController')->middleware('auth');
+  Route::resource('manufacturing_location2', 'Manufacturing\LocationController')->middleware('auth');
   Route::resource('manufacturing_inventory', 'Manufacturing\InventoryController')->middleware('auth');
   Route::resource('bill_of_material', 'Manufacturing\BillOfMaterialController')->middleware('auth');
   Route::get('bill_of_material_inv_pdfview', array('as' => 'bill_of_material_inv_pdfview', 'uses' => 'Manufacturing\BillOfMaterialController@inv_pdfview'))->middleware('auth');
@@ -669,7 +669,7 @@ Route::group(['prefix' => 'manufacturing'], function () {
   Route::any('packing_model/{$id}', 'Manufacturing\BillOfMaterialController@packing_model')->name('packing_model')->middleware('auth');
 
 
-  // Route::resource('manufacturing_location', 'Manufacturing\LocationController')->middleware('auth');
+  
   // Route::resource('manufacturing_inventory', 'Manufacturing\InventoryController')->middleware('auth');
   // Route::resource('bill_of_material', 'Manufacturing\BillOfMaterialController')->middleware('auth');
   // Route::resource('work_order', 'Manufacturing\WorkOrderController')->middleware('auth');

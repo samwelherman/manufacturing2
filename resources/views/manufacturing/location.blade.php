@@ -76,12 +76,12 @@
                                                 <td>
                                                 <div class="form-inline">
                                                     <a class="btn btn-xs btn-outline-info text-uppercase px-2 rounded"
-                                                        href="{{ route("manufacturing_location.edit", $row->id)}}">
+                                                        href="{{ route("manufacturing_location2.edit", $row->id)}}">
                                                         <i class="icon-pencil7"></i>
                                                     </a>
                                                    
 
-                                                    {!! Form::open(['route' => ['manufacturing_location.destroy',$row->id],
+                                                    {!! Form::open(['route' => ['manufacturing_location2.destroy',$row->id],
                                                     'method' => 'delete']) !!}
                                                     {{ Form::button('<i class="icon-trash"></i>', ['type' => 'submit', 'class' => 'btn btn-xs btn-outline-danger text-uppercase px-2 rounded demo4', 'title' => 'Delete', 'onclick' => "return confirm('Are you sure?')"]) }}
                                                     {{ Form::close() }}
@@ -113,7 +113,7 @@
                                         <div class="row">
                                             <div class="col-sm-12 ">
                                                      @if(isset($id))
-                                                {{ Form::model($id, array('route' => array('manufacturing_location.update', $id), 'method' => 'PUT')) }}
+                                                {{ Form::model($id, array('route' => array('manufacturing_location2.update', $id), 'method' => 'PUT')) }}
                                                 @else
                                                 {{ Form::open(['route' => 'manufacturing_location.store']) }}
                                                 @method('POST')
