@@ -156,7 +156,7 @@ $settings= App\Models\System::first();
                     <div class="navbar-collapse collapse" id="navbar-footer">
                         <span class="navbar-text">
                             &copy; <?php echo date('Y'); ?> <a href="#">Manufacturing System</a> by <a
-                                href="https://foundas.co.tz/" target="_blank">Foundas Technology</a>
+                                href="https://foundas.co.tz/" target="_blank">Clickhuduma company limited</a>
                         </span>
 
                         <ul class="navbar-nav ml-lg-auto">
