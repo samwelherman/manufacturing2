@@ -125,19 +125,6 @@ Route::any('quotationDetails/{id}','orders\OrdersController@quotationDetails')->
 });
 
 //Seasson Routes
-Route::group(['prefix' => 'farming_season'], function () {
-
-Route::resource('/seasson','farming\SeassonController')->middleware('auth');
-//Route::resource('/cropslifecycle','farming\CropsLifeCycleController')->middleware('auth');
-Route::any('editLifeCycle',array('as'=>'editLifeCycle','uses'=>'farming\CropsLifeCycleController@editLifeCycle'))->middleware('auth');
-Route::any('deleteLifeCycle',array('as'=>'deleteLifeCycle','uses'=>'farming\CropsLifeCycleController@deleteLifeCycle'))->middleware('auth');
-Route::get('findFarm',"farming\SeassonController@findFarm" )->middleware('auth');
-Route::get('findLime',"farming\CropsLifeCycleController@findLime" )->middleware('auth');
-Route::get('findSeed',"farming\CropsLifeCycleController@findSeed" )->middleware('auth');
-Route::get('findPesticide',"farming\CropsLifeCycleController@findPesticide" )->middleware('auth');
-Route::get('monitorModal', 'farming\CropsLifeCycleController@discountModal')->middleware('auth');
-Route::post('save_monitor', 'farming\CropsLifeCycleController@save_monitor')->name('monitor.save')->middleware('auth');
-});
 
 Route::get('home',"HomeController@index" )->middleware('auth');
 
