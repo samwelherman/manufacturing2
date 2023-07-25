@@ -129,40 +129,6 @@ Route::any('quotationDetails/{id}','orders\OrdersController@quotationDetails')->
 Route::get('home',"HomeController@index" )->middleware('auth');
 
 
-Route::group(['prefix' => 'farmer_management'], function () {
-
-Route::get('farmer','FarmerController@index')->middleware('auth');
-//Route::post('save','FarmerController@store')->middleware('auth');
-Route::get('farmer/{id}/edit','FarmerController@edit')->middleware('auth');
-//Route::resource('farmer','FarmerController')->middleware('auth');
-Route::post('farmer/update/{id}','FarmerController@update')->middleware('auth');
-Route::post('farmer/save','FarmerController@store')->middleware('auth');
-Route::get('farmer/{id}/delete','FarmerController@destroy')->middleware('auth');
-Route::get('farmer/{id}/show','FarmerController@show')->middleware('auth');
-Route::get('findRegion', 'FarmerController@findRegion')->middleware('auth');  
-Route::get('findDistrict', 'FarmerController@findDistrict')->middleware('auth');  
-Route::get('assign_farmer','FarmerController@assign_farmer')->middleware('auth');
-Route::post('save_farmer', 'FarmerController@save_farmer')->name('farmer.save')->middleware('auth');
-Route::get('farmerModal', 'FarmerController@discountModal')->middleware('auth');
-
-
-Route::post('group/{id}/update','GroupController@update')->middleware('auth');
-Route::get('manage-group','GroupController@index')->middleware('auth');
-Route::post('group/save','GroupController@store')->middleware('auth');
-Route::get('group/{id}/delete','GroupController@destroy')->middleware('auth');
-
-Route::get('farmer/group/{id}/add','MemberController@index')->middleware('auth');
-Route::get('farmer/group/','MemberController@show')->middleware('auth');
-
-route::post('save','MemberController@store')->middleware('auth');
-
-route::get('land','LandController@index')->middleware('auth');
-route::post('land/save','LandController@store')->middleware('auth');
-route::get('land/{id}/delete','LandController@destroy')->middleware('auth');
-route::post('land/{id}/edit','LandController@update')->middleware('auth');
-//oute::get('test',[App\Http\Livewire\Counter::class, 'render'])->middleware('auth');
-
-});
 
 Route::group(['prefix' => 'project'], function () {
    Route::resource('project', 'Project\ProjectController')->middleware('auth');
