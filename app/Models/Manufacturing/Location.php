@@ -9,7 +9,7 @@ class Location extends Model
 {
     use HasFactory;
 
-    protected $table = "manufacturing_location2s";
+    protected $table = "manufacturing_locations";
 
     protected $fillable = [
     'name',

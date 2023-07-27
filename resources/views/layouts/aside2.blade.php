@@ -74,8 +74,8 @@
                  
                 @can('view-store')
                 <li class="nav-item">
-                    <a class="nav-link {{ request()->is('manufacturing/manufacturing_location2*') ? 'active' : '' }}"
-                        href="{{ url('manufacturing/manufacturing_location2') }}">
+                    <a class="nav-link {{ request()->is('manufacturing/manufacturing_location*') ? 'active' : '' }}"
+                        href="{{ url('manufacturing/manufacturing_location') }}">
                         <i class="icon-store"></i><span>Stores</span>
                     </a>
                 </li>

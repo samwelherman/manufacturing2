@@ -60,7 +60,7 @@ class LocationController extends Controller
         
         $location = Location::create($data);
  
-        return redirect(route('manufacturing_location2.index'))->with(['success'=>'Location Created Successfully']);
+        return redirect(route('manufacturing_location.index'))->with(['success'=>'Location Created Successfully']);
     }
 
     /**
@@ -116,7 +116,7 @@ class LocationController extends Controller
         $data['added_by']=auth()->user()->added_by;
         $location->update($data);
  
-        return redirect(route('manufacturing_location2.index'))->with(['success'=>'Location Updated Successfully']);
+        return redirect(route('manufacturing_location.index'))->with(['success'=>'Location Updated Successfully']);
     }
 
     /**
@@ -131,6 +131,6 @@ class LocationController extends Controller
         $location=  Location::find($id);
         $location->delete();
  
-        return redirect(route('manufacturing_location2.index'))->with(['success'=>'Location Deleted Successfully']);
+        return redirect(route('manufacturing_location.index'))->with(['success'=>'Location Deleted Successfully']);
     }
 }
